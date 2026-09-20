@@ -1,0 +1,124 @@
+<!-- CABEÇALHO -->
+<header>
+    <!-- Logo ou Nome do Sistema -->
+    <div class="logo">
+        <h1>IT Sentinel</h1>
+    </div>
+
+    <!-- Menu de navegação -->
+    <nav class="menu">
+        <ul>
+            <li>
+                <a routerLink="/home" fragment="como-funciona">Como Funciona</a>
+            </li>
+            <li>
+                <a routerLink="/home" fragment="quem-somos">Quem Somos</a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Área de ações do usuário. Caixa maior -->
+    <div class="acoes-usuario">
+        <!-- Área de acessibilidade -->
+        <div class="acessibilidade">
+            <button type="button" title="Aumentar texto">A+</button>
+            <button type="button" title="Diminuir texto">A−</button>
+            <button type="button" title="Alto contraste">◐</button>
+            <button type="button" title="Libras">🤟</button>
+        </div>
+
+        <!-- Área para o botão de Login -->
+        <div class="area-login">
+            <!-- routerLink aplicado -->
+            <a routerLink="/login" class="botao-login">Acessar Sistema</a>
+        </div>
+    </div>
+</header>
+
+<main>
+    <!-- CARROSSEL -->
+    <section class="secao-carrossel">
+        <div class="carrossel">
+            
+            @let slide = slides[slideAtual];
+            <!-- SLIDE DINÂMICO -->
+            <div class="slide-carrossel">
+                <div class="imagem-carrossel">
+                    <img [src]="slide.imagem" [alt]="slide.alt">
+                </div>
+                <div class="texto-carrossel">
+                    <span>{{ slide.tag }}</span>
+                    <h2>{{ slide.titulo }}</h2>
+                    <p>{{ slide.texto }}</p>
+                </div>
+            </div>
+
+            <!-- CONTROLES DO CARROSSEL -->
+            <div class="controles-carrossel">
+                <!-- Seta Esquerda (Volta) -->
+                <button class="seta-carrossel" type="button" (click)="slideAnterior()">&#10094;</button>
+
+                <!-- Indicadores dos slides -->
+                <div class="indicadores-carrossel">
+                    @for (s of slides; track $index) {
+                        <span class="indicador" 
+                              [class.ativo]="$index === slideAtual" 
+                              (click)="irParaSlide($index)">
+                        </span>
+                    }
+                </div>
+
+                <!-- Seta Direita (Avança) -->
+                <button class="seta-carrossel" type="button" (click)="avancarManual()">&#10095;</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO COMO FUNCIONA -->
+    <section class="secao-como-funciona" id="como-funciona">
+        <div class="texto-como-funciona">
+            <span>COMO FUNCIONA</span>
+            <h2>Como o IT Sentinel funciona?</h2>
+            <p>O IT Sentinel organiza e acompanha as informações dos equipamentos de tecnologia da empresa.</p>
+            <p>A partir do histórico de problemas, chamados e manutenções, a plataforma permite acompanhar a situação dos equipamentos e identificar sinais que podem indicar a necessidade de uma ação.</p>
+            <p>Dessa forma, a equipe de TI pode ter uma visão mais organizada do ambiente e agir de maneira preventiva.</p>
+        </div>
+    </section>
+
+    <!-- SEÇÃO QUEM SOMOS -->
+    <section class="secao-quem-somos" id="quem-somos">
+        <div class="texto-quem-somos">
+            <span>QUEM SOMOS</span>
+            <h2>Solutecno</h2>
+            <p>Aqui será apresentada a história da Solutecno, sua atuação e sua relação com o desenvolvimento do IT Sentinel.</p>
+
+            <!-- Conteúdo será preenchido posteriormente -->
+        </div>
+
+        <div class="imagem-quem-somos">
+            <!-- Espaço reservado para a logo ou foto da Solutecno -->
+            <span>Logo / Foto da Solutecno</span>
+        </div>
+    </section>
+</main>
+
+<!-- RODAPÉ -->
+<footer>
+    <div class="conteudo-footer">
+        <div class="logo-footer">
+            <h2>IT Sentinel</h2>
+            <p>Gestão inteligente de equipamentos de TI.</p>
+        </div>
+
+        <div class="informacoes-footer">
+            <h3>Informações</h3>
+            <a routerLink="/home" fragment="como-funciona">Como Funciona</a>
+            <a routerLink="/home" fragment="quem-somos">Quem Somos</a>
+        </div>
+
+        <div class="lgpd-footer">
+            <h3> Política de Privacidade e LGPD </h3>
+            <p>Este sistema respeita as diretrizes da Lei Geral de Proteção de Dados (LGPD).</p>
+        </div>
+    </div>
+</footer>

@@ -1,0 +1,43 @@
+ <!-- ÁREA PRINCIPAL DO LOGIN -->
+    <main class="pagina-login">
+        <!-- CARD DE LOGIN -->
+        <section class="card-login">
+            <!-- Pode colocar a logo ou deixa o nome do sistema-->
+            <div class="logo-login">
+                <h1>IT Sentinel</h1>
+            </div>
+
+            <!-- Identificação do ambiente -->
+            <div class="titulo-login">
+                <span>AMBIENTE PROTEGIDO</span>
+                <h2>Acesso Restrito</h2>
+                <p>Equipe de TI</p>
+            </div>
+
+            <!-- FORMULÁRIO DE LOGIN -->
+            <form class="formulario-login">
+                <!-- Campo de e-mail -->
+                <div class="campo-login">
+                    <label for="email">E-mail corporativo</label>
+                    <input type="email" id="email" name="email" placeholder="Digite seu e-mail">
+                </div>
+
+                <!-- Campo de senha -->
+                <div class="campo-login">
+                    <label for="senha">Senha</label>
+                    <input type="password" id="senha" name="senha" placeholder="Digite sua senha" minlength="8" required>
+                </div>
+
+                <!-- Botão de acesso -->
+                <button type="button" routerLink="/dashboard" class="botao-entrar">Entrar no Dashboard</button>
+            </form>
+
+            <!-- INFORMAÇÃO SOBRE LGPD -->
+            <div class="informacao-lgpd">
+                <p>Seus dados são tratados de acordo com as diretrizes da Lei Geral de Proteção de Dados (LGPD).</p>
+            </div>
+
+            <!-- Voltar para a página home -->
+            <a routerLink="/home" class="voltar-home">Voltar Home</a>
+        </section>
+    </main>

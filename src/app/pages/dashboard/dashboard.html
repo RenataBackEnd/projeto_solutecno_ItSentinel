@@ -1,0 +1,158 @@
+<!-- MENU LATERAL -->
+    <aside class="menu-lateral">
+        <div class="logo-lateral">
+            <h2>IT Sentinel</h2>
+        </div>
+
+        <div class="secao-menu">
+            <p class="titulo-menu">GESTÃO DO AMBIENTE</p>
+            <nav class="links-menu">
+                <a href="#" class="ativo"><span class="icone">⊞</span> Visão Geral</a>
+                <a href="#"><span class="icone">📦</span> Inventário</a>
+                <a href="#"><span class="icone">📊</span> Relatórios</a>
+                <a href="#"><span class="icone">🔔</span> Alertas <span class="badge">12</span></a>
+            </nav>
+        </div>
+
+        <div class="rodape-lateral">
+            <a href="#" class="link-ajuda">Precisa de ajuda?<br><span>Fale com o suporte</span></a>
+            <!-- Link conectando de volta para a tela de login -->
+            <a routerLink="/login" class="link-sair"><span class="icone">🚪</span> Sair do Sistema</a>
+        </div>
+    </aside>
+
+    <!-- ÁREA PRINCIPAL -->
+    <main class="conteudo-principal">
+        
+        <!-- CABEÇALHO DO DASHBOARD -->
+        <header class="cabecalho-dashboard">
+            <div class="boas-vindas">
+                <span class="data-atual">SÁBADO, 19 SET 2026</span>
+                <h1>Bom dia, Renata 👋</h1>
+            </div>
+
+            <div class="acoes-usuario">
+                <!-- BLOCO DE ACESSIBILIDADE -->
+                <div class="acessibilidade">
+                    <button type="button" title="Aumentar texto">A+</button>
+                    <button type="button" title="Diminuir texto">A−</button>
+                    <button type="button" title="Alto contraste">◐</button>
+                    <button type="button" title="Libras">🤟</button>
+                </div>
+
+                <!-- PERFIL DO USUÁRIO -->
+                <div class="perfil-usuario">
+                    <div class="avatar">RR</div>
+                    <div class="info-usuario">
+                        <span class="nome-usuario">Renata Rosário</span>
+                        <span class="cargo-usuario">Gestão de TI</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- SEÇÃO: VISÃO GERAL (CARDS) -->
+        <section class="visao-geral">
+            <div class="titulo-secao">
+                <h2>Visão Geral</h2>
+                <p>Saúde do ambiente monitorado em tempo real</p>
+            </div>
+
+            <div class="grade-cards">
+                <!-- Card 1 -->
+                <div class="card-dashboard saudavel">
+                    <div class="cabecalho-card">
+                        <span class="icone-card">🛡️</span>
+                        <span class="tendencia">+12%</span>
+                    </div>
+                    <h3>145</h3>
+                    <p class="rotulo-card">Saudáveis</p>
+                    <p class="descricao-card">Máquinas operando normalmente</p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="card-dashboard atencao">
+                    <div class="cabecalho-card">
+                        <span class="icone-card">⚠️</span>
+                        <span class="tendencia">-2%</span>
+                    </div>
+                    <h3>12</h3>
+                    <p class="rotulo-card">Atenção</p>
+                    <p class="descricao-card">Aguardando revisão da equipe</p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="card-dashboard critico">
+                    <div class="cabecalho-card">
+                        <span class="icone-card">🛑</span>
+                        <span class="tendencia">+1%</span>
+                    </div>
+                    <h3>3</h3>
+                    <p class="rotulo-card">Risco Crítico</p>
+                    <p class="descricao-card">Prestes a impactar a operação</p>
+                </div>
+
+                <!-- Card 4: Índice -->
+                <div class="card-dashboard indice">
+                    <div class="cabecalho-card">
+                        <p class="rotulo-card">ÍNDICE DE SAÚDE</p>
+                    </div>
+                    <div class="conteudo-indice">
+                        <h2>91%</h2>
+                        <div class="grafico-circulo">91%</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO: TABELA DE MÁQUINAS -->
+        <section class="secao-tabela">
+            <div class="cabecalho-tabela">
+                <div>
+                    <h2>Máquinas que precisam de atenção</h2>
+                    <p>Priorize os próximos diagnósticos do seu parque</p>
+                </div>
+                <div class="barra-pesquisa">
+                    <input type="text" placeholder="🔍 Buscar máquina...">
+                </div>
+            </div>
+
+            <table class="tabela-dashboard">
+                <thead>
+                    <tr>
+                        <th>MÁQUINA</th>
+                        <th>STATUS</th>
+                        <th>PROBLEMA PREVISTO</th>
+                        <th>PRIORIDADE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="icone-maquina">💻</span> PC-Diretoria</td>
+                        <td><span class="ponto critico"></span> Crítico</td>
+                        <td>Aquecimento de CPU</td>
+                        <td><a href="#">Ver diagnóstico →</a></td>
+                    </tr>
+                    <tr>
+                        <td><span class="icone-maquina">💻</span> NB-Financeiro-04</td>
+                        <td><span class="ponto atencao"></span> Atenção</td>
+                        <td>Armazenamento em 97%</td>
+                        <td><a href="#">Ver diagnóstico →</a></td>
+                    </tr>
+                    <tr>
+                        <td><span class="icone-maquina">💻</span> PC-Atendimento-12</td>
+                        <td><span class="ponto atencao"></span> Atenção</td>
+                        <td>Atualização pendente</td>
+                        <td><a href="#">Ver diagnóstico →</a></td>
+                    </tr>
+                    <tr>
+                        <td><span class="icone-maquina">🖥️</span> SRV-ARQUIVOS-01</td>
+                        <td><span class="ponto critico"></span> Crítico</td>
+                        <td>Backup não realizado</td>
+                        <td><a href="#">Ver diagnóstico →</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+    </main>
