@@ -1,8 +1,7 @@
- <!-- ÁREA PRINCIPAL DO LOGIN -->
+<!-- ÁREA PRINCIPAL DO LOGIN -->
     <main class="pagina-login">
         <!-- CARD DE LOGIN -->
         <section class="card-login">
-            <!-- Pode colocar a logo ou deixa o nome do sistema-->
             <div class="logo-login">
                 <h1>IT Sentinel</h1>
             </div>
@@ -15,22 +14,30 @@
             </div>
 
             <!-- FORMULÁRIO DE LOGIN -->
-            <form class="formulario-login">
+            <!-- Removemos a tag <form> padrão para termos controlo total com o Angular -->
+            <div class="formulario-login">
+                
+                <!-- Mensagem de Erro (Só aparece se houver erro) -->
+                <div class="mensagem-erro" *ngIf="mensagemErro">
+                    {{ mensagemErro }}
+                </div>
+
                 <!-- Campo de e-mail -->
                 <div class="campo-login">
                     <label for="email">E-mail corporativo</label>
-                    <input type="email" id="email" name="email" placeholder="Digite seu e-mail">
+                    <!-- Usamos [(ngModel)] para ligar o campo à variável do TypeScript -->
+                    <input type="email" id="email" [(ngModel)]="emailUsuario" placeholder="ex: seu.nome@solutecno.com.br" required>
                 </div>
 
                 <!-- Campo de senha -->
                 <div class="campo-login">
                     <label for="senha">Senha</label>
-                    <input type="password" id="senha" name="senha" placeholder="Digite sua senha" minlength="8" required>
+                    <input type="password" id="senha" [(ngModel)]="senhaUsuario" placeholder="Mínimo 8 caracteres">
                 </div>
 
-                <!-- Botão de acesso -->
-                <button type="button" routerLink="/dashboard" class="botao-entrar">Entrar no Dashboard</button>
-            </form>
+                <!-- Botão de acesso (Agora chama a função fazerLogin em vez de usar routerLink) -->
+                <button type="button" (click)="fazerLogin()" class="botao-entrar">Entrar no Dashboard</button>
+            </div>
 
             <!-- INFORMAÇÃO SOBRE LGPD -->
             <div class="informacao-lgpd">

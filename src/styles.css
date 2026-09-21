@@ -10,3 +10,57 @@ body {
     background-color: #f5f9f6;
     color: #333333;
 }
+
+/* --- ESTILOS DE ACESSIBILIDADE CORRIGIDOS E MAIS VISÍVEIS --- */
+
+/* Nível 1: Fonte Grande (A+) */
+body.fonte-grande p,
+body.fonte-grande span,
+body.fonte-grande a,
+body.fonte-grande li,
+body.fonte-grande button {
+  font-size: 120% !important;
+}
+
+body.fonte-grande h2 {
+  font-size: 115% !important;
+}
+
+/* Nível 2: Fonte Maior (A+ clicado duas vezes) */
+body.fonte-maior p,
+body.fonte-maior span,
+body.fonte-maior a,
+body.fonte-maior li,
+body.fonte-maior button {
+  font-size: 140% !important;
+}
+
+body.fonte-maior h2 {
+  font-size: 130% !important;
+}
+
+/* Modo Alto Contraste (Fundo Preto com Texto Amarelo de alto destaque) */
+body.alto-contraste {
+  background-color: #000000 !important;
+  color: #ffff00 !important;
+}
+
+body.alto-contraste header, 
+body.alto-contraste footer, 
+body.alto-contraste section, 
+body.alto-contraste div,
+body.alto-contraste .carrossel,
+body.alto-contraste .slide-carrossel {
+  background-color: #000000 !important;
+  color: #ffff00 !important;
+  border-color: #ffff00 !important;
+}
+
+body.alto-contraste a, 
+body.alto-contraste h1, 
+body.alto-contraste h2, 
+body.alto-contraste h3, 
+body.alto-contraste p, 
+body.alto-contraste span {
+  color: #ffff00 !important;
+}

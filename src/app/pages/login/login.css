@@ -143,6 +143,19 @@
     text-decoration: underline;
 }
 
+/* MENSAGEM DE ERRO (Ajustada para combinar com o input e botão) */
+.mensagem-erro {
+    background-color: #ffebee; 
+    color: #c62828; 
+    padding: 10px;
+    border-radius: 8px; 
+    margin-bottom: 5px;
+    font-size: 14px; 
+    font-weight: bold;
+    text-align: center;
+    border: 1px solid #ffcdd2;
+}
+
 /* RESPONSIVIDADE */
 @media (max-width: 450px) {
     .card-login {

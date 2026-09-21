@@ -13,9 +13,9 @@ export const routes: Routes = [
   // Rota para o Dashboard
   { path: 'dashboard', component: Dashboard },
   
-  // Quando abrir localhost:4200 vazio, joga para o login
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  // Quando abrir localhost:4200 vazio, joga para a HOME
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   
-  // Rota de segurança: se o usuário digitar um endereço que não existe, joga pro login
-  { path: '**', redirectTo: 'login' }
+  // Rota de segurança: se o usuário digitar um endereço que não existe, joga pra HOME
+  { path: '**', redirectTo: 'home' }
 ];

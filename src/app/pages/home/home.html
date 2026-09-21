@@ -21,10 +21,10 @@
     <div class="acoes-usuario">
         <!-- Área de acessibilidade -->
         <div class="acessibilidade">
-            <button type="button" title="Aumentar texto">A+</button>
-            <button type="button" title="Diminuir texto">A−</button>
-            <button type="button" title="Alto contraste">◐</button>
-            <button type="button" title="Libras">🤟</button>
+            <button type="button" title="Aumentar texto" (click)="aumentarFonte()">A+</button>
+            <button type="button" title="Diminuir texto" (click)="diminuirFonte()">A−</button>
+            <button type="button" title="Alto contraste" (click)="alternarContraste()">◐</button>
+            <button type="button" title="Libras" (click)="ativarLibras()">🤟</button>
         </div>
 
         <!-- Área para o botão de Login -->
@@ -40,16 +40,16 @@
     <section class="secao-carrossel">
         <div class="carrossel">
             
-            @let slide = slides[slideAtual];
+        
             <!-- SLIDE DINÂMICO -->
             <div class="slide-carrossel">
                 <div class="imagem-carrossel">
-                    <img [src]="slide.imagem" [alt]="slide.alt">
+                    <img [src]="slides[slideAtual].imagem" [alt]="slides[slideAtual].alt">
                 </div>
                 <div class="texto-carrossel">
-                    <span>{{ slide.tag }}</span>
-                    <h2>{{ slide.titulo }}</h2>
-                    <p>{{ slide.texto }}</p>
+                    <span>{{ slides[slideAtual].tag }}</span>
+                    <h2>{{ slides[slideAtual].titulo }}</h2>
+                    <p>{{ slides[slideAtual].texto }}</p>
                 </div>
             </div>
 
@@ -97,7 +97,7 @@
 
         <div class="imagem-quem-somos">
             <!-- Espaço reservado para a logo ou foto da Solutecno -->
-            <span>Logo / Foto da Solutecno</span>
+            <img src="imagens/logo-solutecno.png" alt="Logo Solutecno">
         </div>
     </section>
 </main>
@@ -105,20 +105,38 @@
 <!-- RODAPÉ -->
 <footer>
     <div class="conteudo-footer">
-        <div class="logo-footer">
-            <h2>IT Sentinel</h2>
+        
+        <!--Logo (com a imagem) e Slogan -->
+        <div class="coluna-footer marca">
+            <div class="logo-footer">
+                <img src="public/imagens/icone-sentinel" alt="Ícone IT Sentinel" class="icone-logo">
+                <h2>IT Sentinel</h2>
+            </div>
             <p>Gestão inteligente de equipamentos de TI.</p>
         </div>
 
-        <div class="informacoes-footer">
-            <h3>Informações</h3>
+        <!-- Informações -->
+        <div class="coluna-footer">
+            <h3>INFORMAÇÕES</h3>
             <a routerLink="/home" fragment="como-funciona">Como Funciona</a>
             <a routerLink="/home" fragment="quem-somos">Quem Somos</a>
         </div>
 
-        <div class="lgpd-footer">
-            <h3> Política de Privacidade e LGPD </h3>
-            <p>Este sistema respeita as diretrizes da Lei Geral de Proteção de Dados (LGPD).</p>
+        <!-- Solutecno e Redes -->
+        <div class="coluna-footer solutecno-links">
+            <h3>SOLUTECNO</h3>
+            <a href="https://contatosolutecno.wixsite.com/solutecno" target="_blank" rel="noopener noreferrer">🌐 Site Oficial</a>
+            <div class="icones-redes">
+                <a href="https://www.instagram.com/solutecnoba/" target="_blank" title="Instagram" rel="noopener noreferrer">📷 Instagram</a>
+                <a href="https://wa.me/5571987611575" target="_blank" title="WhatsApp" rel="noopener noreferrer">💬 WhatsApp</a>
+            </div>
         </div>
+
+        <!-- LGPD e Copyright -->
+        <div class="coluna-footer lgpd-copy">
+            <p>Este sistema respeita as diretrizes da <a href="https://www.gov.br/cidadania/pt-br/acesso-a-informacao/lgpd" target="_blank" rel="noopener noreferrer">Lei Geral de Proteção de Dados (LGPD)</a>.</p>
+            <span class="copyright">&copy; 2026 Solutecno. Todos os direitos reservados.</span>
+        </div>
+
     </div>
 </footer>
