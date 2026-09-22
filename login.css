@@ -1,0 +1,172 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* O box-sizing: border-box garante que o padding não aumente o tamanho total dos elementos, evitando quebrar o layout. */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f9f6;
+    color: #333333;
+}
+
+/* ÁREA PRINCIPAL DO LOGIN */
+.pagina-login {
+    /* 100vh briga essa área a ter exatamente a altura total da tela do monitor. Card perfeitamente centralizado no meio da tela. */
+    min-height: 100vh; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+/* CARD DE LOGIN */
+.card-login {
+    width: 100%;
+    max-width: 450px;
+    padding: 45px;
+    background-color: #ffffff;
+    border: 1px solid #dce8df;
+    border-radius: 18px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    /* rgba no box-shadow cria a sombra. O último número (0.08) é a transparência. Quanto menor, mais suave e elegante fica a sombra. */
+}
+
+/* LOGO DO SISTEMA */
+.logo-login {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.logo-login h1 {
+    color: #1a4a2f;
+    font-size: 30px;
+}
+
+/* TÍTULO DO LOGIN. Inclui: Ambiente Protegido - Acesso Restrito - Equipe de TI*/
+.titulo-login {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.titulo-login span {
+    display: block;
+    margin-bottom: 12px;
+    color: #3a894b;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+}
+
+.titulo-login h2 {
+    margin-bottom: 8px;
+    color: #1a4a2f;
+    font-size: 28px;
+}
+
+.titulo-login p {
+    color: #666666;
+    font-size: 15px;
+}
+
+/* FORMULÁRIO DE LOGIN */
+.formulario-login {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    /* gap cria um espaço automático e igual entre os campos de e-mail, senha e o botão, sem precisar usar margin-bottom em cada um deles. */
+}
+
+/* CAMPOS DO LOGIN */
+.campo-login {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.campo-login label {
+    color: #1a4a2f;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.campo-login input {
+    width: 100%;
+    height: 46px;
+    padding: 0 14px;
+    border: 1px solid #b8cfc0;
+    border-radius: 8px;
+    outline: none; 
+    /* outline: none remove borda azul feia e grossa que o Chrome coloca automaticamente quando você clica para digitar. */
+    font-size: 15px;
+    transition: border-color 0.3s ease; 
+    /* Isso faz com que a borda mude para verde de forma suave (em 0.3 segundos) quando o usuário clicar */
+}
+
+/* EXPLICANDO: A pseudo-classe :focus é ativada no exato momento em que o usuário clica dentro do campo para digitar. */
+.campo-login input:focus {
+    border-color: #3a894b;
+}
+
+/* BOTÃO DE ENTRAR */
+.botao-entrar {
+    width: 100%;
+    height: 48px;
+    margin-top: 5px;
+    border: none;
+    border-radius: 8px;
+    background-color: #3a894b;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    transition: background-color 0.3s ease; /* efeito suave de transição aplicado para quando o mouse passar por cima do botão. */
+}
+    
+
+/* hover é ativada quando o usuário passa a setinha do mouse por cima do botão. */
+.botao-entrar:hover {
+    background-color: #1a4a2f;
+}
+
+/* INFORMAÇÃO SOBRE LGPD */
+.informacao-lgpd {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.informacao-lgpd p {
+    color: #777777;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* VOLTAR PARA O HOME */
+.voltar-home {
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+    color: #1a4a2f;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.voltar-home:hover {
+    text-decoration: underline;
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 450px) {
+    .card-login {
+        padding: 35px 25px;
+    }
+
+    .logo-login h1 {
+        font-size: 26px;
+    }
+
+    .titulo-login h2 {
+        font-size: 24px;
+    }
+}

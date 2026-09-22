@@ -21,7 +21,7 @@ export class Home implements OnInit, OnDestroy {
       tag: 'IT SENTINEL',
       titulo: 'Seu ambiente de TI, sempre um passo à frente.',
       texto: 'Uma plataforma criada para ajudar empresas a acompanhar seus equipamentos de tecnologia e identificar sinais de problemas.',
-      imagem: 'imagens/sentinel-monitoramento.png',
+      imagem: 'imagens/umpassoafrente.png',
       alt: 'Gestão de tecnologia da empresa'
     },
     {
@@ -35,7 +35,7 @@ export class Home implements OnInit, OnDestroy {
       tag: 'AÇÃO PREVENTIVA',
       titulo: 'Identifique sinais antes que o problema aconteça.',
       texto: 'O objetivo é ajudar a equipe de TI a perceber sinais de problemas e agir de forma preventiva, evitando interrupções.',
-      imagem: 'imagens/sentinel-prevencao.png',
+      imagem: 'imagens/acaopreventiva.png',
       alt: 'Ação preventiva em equipamentos de TI'
     }
   ];

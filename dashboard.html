@@ -1,4 +1,15 @@
-<!-- MENU LATERAL -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT Sentinel - Dashboard</title>
+    <!-- Ligação com o CSS do Dashboard -->
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+    <!-- MENU LATERAL -->
     <aside class="menu-lateral">
         <div class="logo-lateral">
             <h2>IT Sentinel</h2>
@@ -17,7 +28,7 @@
         <div class="rodape-lateral">
             <a href="#" class="link-ajuda">Precisa de ajuda?<br><span>Fale com o suporte</span></a>
             <!-- Link conectando de volta para a tela de login -->
-            <a routerLink="/login" class="link-sair"><span class="icone">🚪</span> Sair do Sistema</a>
+            <a href="login.html" class="link-sair"><span class="icone">🚪</span> Sair do Sistema</a>
         </div>
     </aside>
 
@@ -76,7 +87,7 @@
                         <span class="icone-card">⚠️</span>
                         <span class="tendencia">-2%</span>
                     </div>
-                    <h3>{{ qtdAtencao }}</h3> <!-- MUDOU AQUI -->
+                    <h3>12</h3>
                     <p class="rotulo-card">Atenção</p>
                     <p class="descricao-card">Aguardando revisão da equipe</p>
                 </div>
@@ -87,7 +98,7 @@
                         <span class="icone-card">🛑</span>
                         <span class="tendencia">+1%</span>
                     </div>
-                    <h3>{{ qtdCritico }}</h3> <!-- MUDOU AQUI -->
+                    <h3>3</h3>
                     <p class="rotulo-card">Risco Crítico</p>
                     <p class="descricao-card">Prestes a impactar a operação</p>
                 </div>
@@ -126,14 +137,29 @@
                         <th>PRIORIDADE</th>
                     </tr>
                 </thead>
-               <tbody>
-                    <tr *ngFor="let maq of listaMaquinas">
-                        <td><span class="icone-maquina">💻</span> {{ maq.nome }}</td>
-                        <td>
-                            <span class="ponto" [class.critico]="maq.status === 'Crítico'" [class.atencao]="maq.status === 'Atenção'"></span> 
-                            {{ maq.status }}
-                        </td>
-                        <td>{{ maq.problema }}</td>
+                <tbody>
+                    <tr>
+                        <td><span class="icone-maquina">💻</span> PC-Diretoria</td>
+                        <td><span class="ponto critico"></span> Crítico</td>
+                        <td>Aquecimento de CPU</td>
+                        <td><a href="#">Ver diagnóstico →</a></td>
+                    </tr>
+                    <tr>
+                        <td><span class="icone-maquina">💻</span> NB-Financeiro-04</td>
+                        <td><span class="ponto atencao"></span> Atenção</td>
+                        <td>Armazenamento em 97%</td>
+                        <td><a href="#">Ver diagnóstico →</a></td>
+                    </tr>
+                    <tr>
+                        <td><span class="icone-maquina">💻</span> PC-Atendimento-12</td>
+                        <td><span class="ponto atencao"></span> Atenção</td>
+                        <td>Atualização pendente</td>
+                        <td><a href="#">Ver diagnóstico →</a></td>
+                    </tr>
+                    <tr>
+                        <td><span class="icone-maquina">🖥️</span> SRV-ARQUIVOS-01</td>
+                        <td><span class="ponto critico"></span> Crítico</td>
+                        <td>Backup não realizado</td>
                         <td><a href="#">Ver diagnóstico →</a></td>
                     </tr>
                 </tbody>
@@ -141,3 +167,5 @@
         </section>
 
     </main>
+</body>
+</html>

@@ -1,0 +1,493 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    color: #333333;
+}
+
+/* Cabeçalho */
+header {
+    background-color: #ffffff;
+    height: 80px; /* altura cabeçalho */
+    display: flex; /* organiza o que está dentro do header */
+    align-items: center; /* centraliza verticalmente */
+    justify-content: space-between; /* distribui os elementos horizontalmente */
+    padding: 0 60px; /* cria espaço nas laterais */
+    border-bottom: 1px solid #dce8df; /* linha discreta na parte inferior do cabeçalho */
+}
+
+/* Nome do Sistema */
+.logo h1 {
+    font-size: 28px;
+    color: #1a4a2f;
+}
+
+/* Menu de Navegação */
+.menu ul {
+    display: flex;
+    gap: 30px;
+    list-style: none;
+}
+
+.menu a {
+    text-decoration: none;
+    color: #1a4a2f;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.menu a:hover {
+    color: #3a894b;
+}
+
+/* Ações do usuário */
+.acoes-usuario {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Acessibilidade */
+.acessibilidade {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.acessibilidade button {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #b8cfc0;
+    background-color: #ffffff;
+    color: #1a4a2f;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.acessibilidade button:hover {
+    background-color: #dcebdd;
+}
+
+/* Botão de acesso ao sistema */
+.botao-login {
+    display: inline-block;
+    background-color: #3a894b;
+    color: #ffffff;
+    padding: 12px 22px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Efeito botão de acesso ao sistema */
+.botao-login:hover {
+    background-color: #1a4a2f;
+}
+
+/* CARROSSEL */
+.secao-carrossel {
+    width: 100%;
+    padding: 60px;
+    background-color: #f5f9f6;
+}
+
+.carrossel {
+    position: relative;
+    max-width: 1200px;
+    min-height: 420px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid #dce8df;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+}
+
+/* Cada slide */
+.slide-carrossel {
+    display: flex;
+    align-items: center;
+    min-height: 420px;
+}
+
+/* Imagem do slide. A moldura */
+.imagem-carrossel {
+    width: 50%;
+    height: 420px;
+    background-color: #dcebdd;
+}
+
+/* A fotografia dentro da moldura */
+.imagem-carrossel img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Texto do slide */
+.texto-carrossel {
+    width: 50%;
+    padding: 50px;
+}
+
+.texto-carrossel span {
+    display: block;
+    margin-bottom: 15px;
+    color: #3a894b;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.texto-carrossel h2 {
+    margin-bottom: 20px;
+    color: #1a4a2f;
+    font-size: 34px;
+    line-height: 1.2;
+}
+
+.texto-carrossel p {
+    color: #333333;
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+/* Controles do carrossel */
+.controles-carrossel {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Setas */
+.seta-carrossel {
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 50%;
+    background-color: #3a894b;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.seta-carrossel:hover {
+    background-color: #1a4a2f;
+}
+
+/* Indicadores. Se refere as bolinha do carrossel se vão ficar ativas ou normais */
+.indicadores-carrossel {
+    display: flex;
+    gap: 8px;
+}
+
+.indicador {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background-color: #b8cfc0;
+}
+
+.indicador.ativo {
+    background-color: #3a894b;
+}
+
+/* COMO FUNCIONA */
+.secao-como-funciona {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 60px;
+    text-align: center;
+}
+
+.texto-como-funciona {
+    max-width: 850px;
+    margin: 0 auto;
+}
+
+.texto-como-funciona span {
+    display: block;
+    margin-bottom: 15px;
+    color: #3a894b;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.texto-como-funciona h2 {
+    margin-bottom: 25px;
+    color: #1a4a2f;
+    font-size: 34px;
+}
+
+.texto-como-funciona p {
+    margin-bottom: 18px;
+    color: #333333;
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+/* QUEM SOMOS */
+.secao-quem-somos {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 60px;
+}
+
+.texto-quem-somos {
+    width: 55%;
+}
+
+.texto-quem-somos span {
+    display: block;
+    margin-bottom: 15px;
+    color: #3a894b;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.texto-quem-somos h2 {
+    margin-bottom: 20px;
+    color: #1a4a2f;
+    font-size: 36px;
+}
+
+.texto-quem-somos p {
+    color: #333333;
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+/* Espaço para imagem/logo da Solutecno */
+.imagem-quem-somos {
+    width: 45%;
+    height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #dcebdd;
+    border-radius: 16px;
+    color: #1a4a2f;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* RODAPÉ */
+footer {
+    background-color: #1a4a2f;
+    color: #ffffff;
+    padding: 50px 60px;
+}
+
+.conteudo-footer {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    gap: 50px;
+}
+
+.logo-footer,
+.informacoes-footer,
+.lgpd-footer {
+    flex: 1;
+}
+
+.logo-footer h2 {
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+
+.logo-footer p {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.informacoes-footer h3,
+.lgpd-footer h3 {
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.informacoes-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.informacoes-footer a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.informacoes-footer a:hover {
+    text-decoration: underline;
+}
+
+.lgpd-footer p {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 900px) {
+    /* Ajusta o cabeçalho para telas menores */
+    header {
+        padding: 0 30px;
+    }
+
+    /* Permite que os botões de acessibilidade se organizem */
+    .acessibilidade {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    /* Diminui o espaço externo do carrossel */
+    .secao-carrossel {
+        padding: 40px 30px;
+    }
+
+    /* Coloca imagem e texto um abaixo do outro */
+    .slide-carrossel {
+        flex-direction: column;
+        min-height: auto;
+    }
+
+    /* Imagem ocupa toda a largura */
+    .imagem-carrossel {
+        width: 100%;
+        height: 280px;
+    }
+
+    /* Texto ocupa toda a largura */
+    .texto-carrossel {
+        width: 100%;
+        padding: 35px;
+        padding-bottom: 70px;
+    }
+
+    .texto-carrossel h2 {
+        font-size: 28px;
+    }
+
+    .secao-como-funciona {
+        padding: 60px 30px;
+    }
+
+    /* Quem Somos também fica em coluna */
+    .secao-quem-somos {
+        flex-direction: column;
+        padding: 60px 30px;
+    }
+
+    .texto-quem-somos,
+    .imagem-quem-somos {
+        width: 100%;
+    }
+
+    /* Organiza o rodapé em uma coluna */
+    .conteudo-footer {
+        flex-direction: column;
+    }
+}
+/* Quando a tela tiver até 450px de largura, aplique estas regras */
+@media (max-width: 450px) {    
+    header {
+        height: auto;
+        flex-direction: column;
+        gap: 20px;
+        padding: 25px 20px;
+    }
+
+    .menu ul {
+        gap: 18px;
+    }
+
+    .menu a {
+        font-size: 14px;
+    }
+
+    /* Organiza os controles (botões) e o acesso ao sistema */
+    .acoes-usuario {
+        width: 100%;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .area-login {
+        width: 100%;
+        text-align: center;
+    }
+
+    .botao-login {
+        width: 100%;
+    }
+
+    /* Diminui o espaço do carrossel no celular */
+    .secao-carrossel {
+        padding: 25px 15px;
+    }
+
+    .carrossel {
+        border-radius: 14px;
+    }
+
+    .imagem-carrossel {
+        height: 220px;
+    }
+
+    .texto-carrossel {
+        padding: 30px 25px 70px;
+    }
+
+    .texto-carrossel h2 {
+        font-size: 25px;
+    }
+
+    .texto-carrossel p {
+        font-size: 15px;
+    }
+
+    .secao-como-funciona,
+    .secao-quem-somos {
+        padding: 50px 20px;
+    }
+
+    .texto-como-funciona h2,
+    .texto-quem-somos h2 {
+        font-size: 28px;
+    }
+
+    .texto-como-funciona p,
+    .texto-quem-somos p {
+        font-size: 16px;
+    }
+
+    .imagem-quem-somos {
+        height: 250px;
+    }
+
+    footer {
+        padding: 40px 25px;
+    }
+}

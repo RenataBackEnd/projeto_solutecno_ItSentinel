@@ -1,0 +1,29 @@
+<div style="max-width: 600px; margin: 40px auto; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); font-family: sans-serif;">
+  <h2 style="color: #124326; margin-bottom: 10px;">Abrir Novo Chamado</h2>
+  <p style="color: #555; margin-bottom: 25px;">Registre um problema em um equipamento para análise da equipe de TI.</p>
+
+  <div style="margin-bottom: 15px;">
+    <label style="display: block; font-weight: bold; margin-bottom: 5px;">Nome da Máquina (Ex: NB-Marketing-05):</label>
+    <input type="text" [(ngModel)]="nomeMaquina" placeholder="Digite o identificador da máquina" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+  </div>
+
+  <div style="margin-bottom: 15px;">
+    <label style="display: block; font-weight: bold; margin-bottom: 5px;">Nível do Problema:</label>
+    <select [(ngModel)]="statusSelecionado" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+      <option value="Atenção">Atenção (Impacto Baixo/Médio)</option>
+      <option value="Crítico">Crítico (Impacto Alto/Parada)</option>
+    </select>
+  </div>
+
+  <div style="margin-bottom: 20px;">
+    <label style="display: block; font-weight: bold; margin-bottom: 5px;">Descrição do Problema Previsto:</label>
+    <textarea [(ngModel)]="descricaoProblema" rows="4" placeholder="Descreva o erro ou falha..." style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;"></textarea>
+  </div>
+
+  <button (click)="enviarChamado()" style="background-color: #124326; color: white; padding: 12px 20px; border: none; border-radius: 4px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold;">Registrar Chamado</button>
+
+  <div *ngIf="mensagemSucesso" style="margin-top: 20px; padding: 15px; background-color: #d4edda; color: #155724; border-radius: 4px; text-align: center; font-weight: bold;">
+    ✅ Chamado registrado com sucesso! A equipe de TI já foi notificada.
+  </div>
+  
+  </div>
