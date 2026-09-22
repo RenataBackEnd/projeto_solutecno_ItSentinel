@@ -17,7 +17,7 @@ export class AberturaChamadoComponent {
   descricaoProblema: string = '';
   mensagemSucesso: boolean = false;
 
-  // INJETAMOS O ROUTER NO CONSTRUTOR
+  // INJETOU O ROUTER NO CONSTRUTOR
   constructor(private chamadoService: ChamadoService, private router: Router) {}
 
   enviarChamado() {

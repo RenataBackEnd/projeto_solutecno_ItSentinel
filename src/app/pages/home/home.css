@@ -68,7 +68,7 @@ header {
 }
 
 .acessibilidade button:hover {
-    background-color: #dcebdd;
+    background-color: #ebdcdd;
 }
 
 /* Botão de acesso ao sistema */
@@ -392,7 +392,7 @@ footer {
 }
 
 /* RESPONSIVIDADE */
-@media (max-width: 900px) {
+@media (max-width: 450px) {
     /* Ajusta o cabeçalho para telas menores */
     header {
         padding: 0 30px;

@@ -42,7 +42,7 @@ body.fonte-maior h2 {
 /* Modo Alto Contraste (Fundo Preto com Texto Amarelo de alto destaque) */
 body.alto-contraste {
   background-color: #000000 !important;
-  color: #ffff00 !important;
+  color: #9ae9ca !important;
 }
 
 body.alto-contraste header, 
@@ -52,8 +52,8 @@ body.alto-contraste div,
 body.alto-contraste .carrossel,
 body.alto-contraste .slide-carrossel {
   background-color: #000000 !important;
-  color: #ffff00 !important;
-  border-color: #ffff00 !important;
+  color: #9ae9ca !important;
+  border-color: #9ae9ca !important;
 }
 
 body.alto-contraste a, 
@@ -62,5 +62,5 @@ body.alto-contraste h2,
 body.alto-contraste h3, 
 body.alto-contraste p, 
 body.alto-contraste span {
-  color: #ffff00 !important;
+  color: #9ae9ca !important;
 }
