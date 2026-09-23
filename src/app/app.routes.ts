@@ -11,7 +11,7 @@ export const routes: Routes = [
   // Rota para a Home
   { path: 'home', component: Home },
 
-  { path: 'chamados', component: AberturaChamadoComponent }, // Rots chamado
+  { path: 'chamado', component: AberturaChamadoComponent }, // Rots chamado
   
   // Rota para o Dashboard
   { path: 'dashboard', component: Dashboard },

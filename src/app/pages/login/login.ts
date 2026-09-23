@@ -39,14 +39,21 @@ export class Login {
       return;
     }
 
+    // Validação Estrita: A senha precisa ser EXATAMENTE a definida por segurança
+    if (this.senhaUsuario !== '12345678') {
+      this.mensagemErro = 'Senha incorreta. Acesso negado.';
+      return;
+    }
+
     // Validação do E-mail Corporativo
     const dominioOficial = '@solutecno.com.br';
     
     if (!this.emailUsuario.toLowerCase().endsWith(dominioOficial)) {
-       this.mensagemErro = 'Acesso negado: Utilize um e-mail corporativo válido (ex: renata.rosario@solutecno.com.br).';
+       this.mensagemErro = 'Acesso negado: Utilize um e-mail corporativo válido (ex: @solutecno.com.br).';
        return;
     }
 
     // Encaminha o usuário para o Dashboard se passar em tudo
     this.router.navigate(['/dashboard']);
-  }}
+  }
+}

@@ -1,10 +1,11 @@
 <!-- CABEÇALHO -->
 <header>
     <!-- Logo ou Nome do Sistema -->
-    <div class="logo">
-        <img src="logo.png">
-        <h1>IT Sentinel</h1>
-    </div>
+   <div class="logo-lateral" style="display: flex; align-items: center; gap: 10px;">
+    <!-- Substitua 'caminho-da-sua-logo.png' pelo caminho real da sua imagem ou ícone -->
+    <img src="imagens/icone-sentinel.png" alt="Logo" style="width: 32px; height: 32px; object-fit: contain;">
+    <h2 style="margin: 0; font-size: 20px;">IT Sentinel</h2>
+</div>
 
     <!-- Menu de navegação -->
     <nav class="menu">
@@ -30,6 +31,9 @@
 
         <!-- Área para o botão de Login -->
         <div class="area-login">
+            <!-- Cole esta linha antes do botão Acessar Sistema -->
+           <a routerLink="/chamado" class="botao-login" style="background-color: #ffffff; color: #3a894b; border: 1px solid #3a894b; margin-right: 15px;">
+           Abrir Chamado</a>
             <!-- routerLink aplicado -->
             <a routerLink="/login" class="botao-login">Acessar Sistema</a>
         </div>
@@ -96,8 +100,7 @@
             <!-- Conteúdo será preenchido posteriormente -->
         </div>
 
-        <div class="imagem-quem-somos">
-            <!-- Espaço reservado para a logo ou foto da Solutecno -->
+        <div class="imagem-quem-somos">            
             <img src="imagens/logo-solutecno.png" alt="Logo Solutecno">
         </div>
     </section>

@@ -15,6 +15,10 @@ export class Dashboard implements OnInit {
   qtdAtencao: number = 0;
   qtdCritico: number = 0;
 
+  // Controlos dos painéis laterais
+  mostrarModalRelatorio: boolean = false;
+  mostrarModalInventario: boolean = false;
+
   constructor(private chamadoService: ChamadoService) {}
 
   ngOnInit() {
@@ -23,5 +27,23 @@ export class Dashboard implements OnInit {
       this.qtdAtencao = maquinas.filter(m => m.status === 'Atenção').length;
       this.qtdCritico = maquinas.filter(m => m.status === 'Crítico').length;
     });
+  }
+
+  // Funções de Relatório (Acionadas pelo menu lateral)
+  abrirModalRelatorio() {
+    this.mostrarModalRelatorio = true;
+  }
+
+  fecharModalRelatorio() {
+    this.mostrarModalRelatorio = false;
+  }
+
+  // Funções de Inventário (Acionadas pelo menu lateral)
+  abrirModalInventario() {
+    this.mostrarModalInventario = true;
+  }
+
+  fecharModalInventario() {
+    this.mostrarModalInventario = false;
   }
 }

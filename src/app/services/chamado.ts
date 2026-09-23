@@ -3,26 +3,38 @@ import { BehaviorSubject } from 'rxjs';
 
 export interface Maquina {
   nome: string;
-  status: 'Saudável' | 'Atenção' | 'Crítico';
+  status: 'Atenção' | 'Crítico';
   problema: string;
+  nomeUsuario?: string; 
+  setorUsuario?: string; 
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChamadoService {
-  private maquinasIniciais: Maquina[] = [
-    { nome: 'Diretório de PCs', status: 'Crítico', problema: 'aquecimento de CPU' },
-    { nome: 'NB-Financeiro-04', status: 'Atenção', problema: '97%' }
+  
+  // Lista inicial de testes
+  private listaInicial: Maquina[] = [
+    { nome: 'Computador - Recepção', status: 'Atenção', problema: 'Lentidão na inicialização' },
+    { nome: 'Impressora RH', status: 'Crítico', problema: 'Não imprime e luz vermelha piscando' }
   ];
 
-  private maquinasSubject = new BehaviorSubject<Maquina[]>(this.maquinasIniciais);
+  // O BehaviorSubject guarda a lista e avisa o Dashboard quando algo muda
+  private maquinasSubject = new BehaviorSubject<Maquina[]>(this.listaInicial);
+  
+  // O Dashboard "ouve" essa variável
   maquinas$ = this.maquinasSubject.asObservable();
 
-  constructor() { }
+  getMaquinas() {
+    return this.maquinasSubject.getValue();
+  }
 
   abrirChamado(novaMaquina: Maquina) {
-    const listaAtual = this.maquinasSubject.value;
-    this.maquinasSubject.next([novaMaquina, ...listaAtual]);
+    const listaAtual = this.maquinasSubject.getValue();
+    listaAtual.push(novaMaquina);
+    
+    // Avisa todo o sistema que a lista atualizou em tempo real!
+    this.maquinasSubject.next(listaAtual);
   }
 }
