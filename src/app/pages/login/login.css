@@ -91,7 +91,7 @@
     /* Isso faz com que a borda mude para verde de forma suave (em 0.3 segundos) quando o usuário clicar */
 }
 
-/* EXPLICANDO: A pseudo-classe :focus é ativada no exato momento em que o usuário clica dentro do campo para digitar. */
+/* focus é ativada no exato momento em que o usuário clica dentro do campo para digitar. */
 .campo-login input:focus {
     border-color: #3a894b;
 }

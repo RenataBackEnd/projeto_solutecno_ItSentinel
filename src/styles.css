@@ -39,7 +39,7 @@ body.fonte-maior h2 {
   font-size: 130% !important;
 }
 
-/* Modo Alto Contraste (Fundo Preto com Texto Amarelo de alto destaque) */
+/* Modo Alto Contraste (Fundo Preto com Texto verde claro) */
 body.alto-contraste {
   background-color: #000000 !important;
   color: #9ae9ca !important;
