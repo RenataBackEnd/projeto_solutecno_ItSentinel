@@ -17,7 +17,7 @@
     </div>
 
     <div class="rodape-lateral">
-        <a href="#" class="link-ajuda">Precisa de ajuda?<br><span>Fale com o suporte</span></a>
+        <a href="javascript:void(0)" class="link-ajuda">Precisa de ajuda?<br><span>Fale com o suporte</span></a>
         <!-- Link conectando de volta para a tela de login -->
         <a routerLink="/login" class="link-sair"><span class="icone">🚪</span> Sair do Sistema</a>
     </div>
@@ -29,18 +29,17 @@
     <!-- CABEÇALHO DO DASHBOARD -->
     <header class="cabecalho-dashboard">
         <div class="boas-vindas">
-            <span class="data-atual">SÁBADO, 28 SET 2026</span>
+            <span class="data-atual">SEGUNDA-FEIRA, 28 SET 2026</span>
             <h1>Bom dia, Renata! </h1>
         </div>
 
         <div class="acoes-usuario">
-            <!-- BLOCO DE ACESSIBILIDADE -->
-            <div class="acessibilidade">
-                <button type="button" title="Aumentar texto">A+</button>
-                <button type="button" title="Diminuir texto">A−</button>
-                <button type="button" title="Alto contraste">◐</button>
-                <button type="button" title="Libras">🤟</button>
-            </div>
+           <div class="acessibilidade">
+            <button type="button" title="Aumentar texto" (click)="aumentarFonte()">A+</button>
+            <button type="button" title="Diminuir texto" (click)="diminuirFonte()">A−</button>
+            <button type="button" title="Alto contraste" (click)="alternarContraste()">◐</button>
+            <button type="button" title="Libras" (click)="ativarLibras()">🤟</button>
+        </div>
 
             <!-- PERFIL DO USUÁRIO -->
             <div class="perfil-usuario">

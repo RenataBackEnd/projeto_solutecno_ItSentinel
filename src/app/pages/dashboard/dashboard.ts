@@ -15,6 +15,9 @@ export class Dashboard implements OnInit {
   qtdAtencao: number = 0;
   qtdCritico: number = 0;
 
+  nivelFonte = 0;
+  altoContrasteAtivo = false;
+
   // Controlos dos painéis laterais
   mostrarModalRelatorio: boolean = false;
   mostrarModalInventario: boolean = false;
@@ -45,5 +48,47 @@ export class Dashboard implements OnInit {
 
   fecharModalInventario() {
     this.mostrarModalInventario = false;
+  }
+
+// FUNÇÕES DE ACESSIBILIDADE 
+
+  aumentarFonte() {
+    if (this.nivelFonte < 2) {
+      this.nivelFonte++;
+      this.aplicarAcessibilidade();
+    }
+  }
+
+  diminuirFonte() {
+    if (this.nivelFonte > 0) {
+      this.nivelFonte--;
+      this.aplicarAcessibilidade();
+    }
+  }
+
+  alternarContraste() {
+    this.altoContrasteAtivo = !this.altoContrasteAtivo;
+    this.aplicarAcessibilidade();
+  }
+
+  aplicarAcessibilidade() {
+    const body = document.body;
+    
+    // Controla o tamanho da fonte globalmente
+    body.classList.remove('fonte-grande', 'fonte-maior');
+    if (this.nivelFonte === 1) body.classList.add('fonte-grande');
+    if (this.nivelFonte === 2) body.classList.add('fonte-maior');
+
+    // Controla o alto contraste
+    if (this.altoContrasteAtivo) {
+      body.classList.add('alto-contraste');
+    } else {
+      body.classList.remove('alto-contraste');
+    }
+  }
+
+  ativarLibras() {
+    // Abre a página oficial do VLibras em nova aba
+    window.open('https://www.gov.br/governodigital/pt-br/vlibras', '_blank');
   }
 }
