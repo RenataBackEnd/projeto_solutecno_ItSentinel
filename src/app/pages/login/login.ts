@@ -24,7 +24,9 @@ export class Login {
 
   // A função que é chamada quando o botão "Entrar" é clicado
   fazerLogin() {
-    this.mensagemErro = ''; // Limpa os erros anteriores
+    this.mensagemErro = ''; // Limpa os erros anteriores    
+    localStorage.setItem('usuarioLogado', 'true'); // Quando o login der certo:
+    localStorage.removeItem('usuarioLogado');
 
     // Verifica se a pessoa não digitou absolutamente nada
     if (!this.emailUsuario || !this.senhaUsuario) {

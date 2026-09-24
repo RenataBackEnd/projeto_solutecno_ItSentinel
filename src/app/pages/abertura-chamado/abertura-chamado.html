@@ -1,7 +1,7 @@
-<div style="max-width: 600px; margin: 40px auto; font-family: sans-serif;">
-
-  <!-- TELA DE LOGIN (Só aparece se NÃO estiver logado) -->
-  <div *ngIf="!usuarioLogado" style="padding: 30px; background: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+<div class="container-centralizado">
+<h2 style="margin: 0 0 20px 0; font-size: 28px; color: #124326;">IT Sentinel</h2>
+   <!-- TELA DE LOGIN (Só aparece se NÃO estiver logado) -->
+  <div *ngIf="!usuarioLogado" style="padding: 30px; background: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 500px;">
     <h2 style="color: #124326; margin-bottom: 10px; text-align: center;">Identificação de Colaborador</h2>
     <p style="color: #555; margin-bottom: 25px; text-align: center;">Faça login para abrir um chamado de TI.</p>
 
@@ -12,7 +12,7 @@
 
     <div style="margin-bottom: 20px;">
       <label style="display: block; font-weight: bold; margin-bottom: 5px;">Senha de Acesso:</label>
-      <input type="password" [(ngModel)]="senhaUsuario" placeholder="Digite a senha (12345678)" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+      <input type="password" [(ngModel)]="senhaUsuario" placeholder="Digite uma senha" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
     </div>
 
     <div *ngIf="mensagemErroLogin" style="color: #d9534f; margin-bottom: 15px; font-weight: bold; text-align: center;">
@@ -28,7 +28,7 @@
 
 
   <!-- FORMULÁRIO DE CHAMADO (Só aparece se ESTIVER logado) -->
-  <div *ngIf="usuarioLogado" style="padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+  <div *ngIf="usuarioLogado" style="padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 600px;">
     <h2 style="color: #124326; margin-bottom: 10px;">Abrir Novo Chamado</h2>
     <p style="color: #555; margin-bottom: 25px;">Olá, <strong>{{ nomeSolicitante }}</strong>! Registre o problema abaixo.</p>
 

@@ -1,0 +1,12 @@
+/* centraliza o que tem dentro da tela */
+.container-centralizado {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centraliza na horizontal */
+    align-items: center; /* Centraliza na vertical */
+    min-height: 100vh; /* Faz a div ocupar 100% da altura da tela */
+    background-color: #f4f7f5; /* Aquela cor verdinha clara do fundo */
+    font-family: sans-serif;
+    padding: 20px; /* Dá um respiro caso a pessoa abra no celular */
+    box-sizing: border-box;
+}

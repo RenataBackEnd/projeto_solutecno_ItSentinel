@@ -87,8 +87,7 @@ export class Dashboard implements OnInit {
     }
   }
 
-  ativarLibras() {
-    // Abre a página oficial do VLibras em nova aba
+  ativarLibras() {    
     window.open('https://www.gov.br/governodigital/pt-br/vlibras', '_blank');
   }
 }

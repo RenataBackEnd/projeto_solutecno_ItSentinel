@@ -207,33 +207,6 @@ header {
     text-align: center;
 }
 
-.texto-como-funciona {
-    max-width: 850px;
-    margin: 0 auto;
-}
-
-.texto-como-funciona span {
-    display: block;
-    margin-bottom: 15px;
-    color: #3a894b;
-    font-size: 14px;
-    font-weight: bold;
-    letter-spacing: 1px;
-}
-
-.texto-como-funciona h2 {
-    margin-bottom: 25px;
-    color: #1a4a2f;
-    font-size: 34px;
-}
-
-.texto-como-funciona p {
-    margin-bottom: 18px;
-    color: #333333;
-    font-size: 17px;
-    line-height: 1.7;
-}
-
 /* QUEM SOMOS */
 .secao-quem-somos {
     display: flex;
@@ -245,10 +218,18 @@ header {
     padding: 80px 60px;
 }
 
+/* Controla a largura das caixas de texto independentemente do estilo da fonte */
+.texto-como-funciona {
+    max-width: 850px;
+    margin: 0 auto;
+}
+
 .texto-quem-somos {
     width: 55%;
 }
 
+/* ESTILOS UNIFICADOS DE TEXTO (Aplica a mesma fonte, cor e tamanho às duas secções) */
+.texto-como-funciona span,
 .texto-quem-somos span {
     display: block;
     margin-bottom: 15px;
@@ -256,18 +237,24 @@ header {
     font-size: 14px;
     font-weight: bold;
     letter-spacing: 1px;
+    text-transform: uppercase; /* Garante que fica sempre em maiúsculas */
 }
 
+.texto-como-funciona h2,
 .texto-quem-somos h2 {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     color: #1a4a2f;
-    font-size: 36px;
+    font-size: 36px; /* Padronizado para 36px */
+    line-height: 1.2;
 }
 
+.texto-como-funciona p,
 .texto-quem-somos p {
     color: #333333;
-    font-size: 18px;
-    line-height: 1.6;
+    font-size: 18px; /* Padronizado para 18px */
+    line-height: 1.6; /* Espaçamento entre linhas mais confortável */
+    margin-bottom: 18px;
+    text-align: justify; /* Alinha o texto de forma limpa em ambas as secções */
 }
 
 /* Espaço para imagem/logo da Solutecno */
@@ -279,15 +266,12 @@ header {
     justify-content: center;
     background-color: transparent;
     border-radius: 16px;
-    color: #1a4a2f;
-    font-size: 16px;
-    font-weight: bold;
 }
 
 .imagem-quem-somos img {
     max-width: 90%;
     max-height: 90%;
-    object-fit: contain; /* Mantém a proporção correta da logo sem distorcer */
+    object-fit: contain;
     border-radius: 8px;
 }
 

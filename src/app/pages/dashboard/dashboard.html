@@ -19,7 +19,7 @@
     <div class="rodape-lateral">
         <a href="javascript:void(0)" class="link-ajuda">Precisa de ajuda?<br><span>Fale com o suporte</span></a>
         <!-- Link conectando de volta para a tela de login -->
-        <a routerLink="/login" class="link-sair"><span class="icone">🚪</span> Sair do Sistema</a>
+        <a routerLink="/login" class="link-sair"><span class="icone"><img src="imagens/porta.png" alt="Sair"></span> Sair do Sistema</a>
     </div>
 </aside>
 
@@ -29,8 +29,9 @@
     <!-- CABEÇALHO DO DASHBOARD -->
     <header class="cabecalho-dashboard">
         <div class="boas-vindas">
-            <span class="data-atual">SEGUNDA-FEIRA, 28 SET 2026</span>
-            <h1>Bom dia, Renata! </h1>
+            <span class="data-atual">SEGUNDA-FEIRA, 28 SET 2026</span>            
+            <h1 style="margin: 0;">Bom dia, Renata!</h1>
+            <img src="imagens/brilho-do-sol.png" alt="Bom dia" style="width: 28px; height: 28px; object-fit: contain;">            
         </div>
 
         <div class="acoes-usuario">
@@ -63,7 +64,7 @@
             <!-- Card 1 -->
             <div class="card-dashboard saudavel">
                 <div class="cabecalho-card">
-                    <span class="icone-card">🛡️</span>
+                    <span class="icone-card"><img src="imagens/escudo24.png" alt="Equipamentos Saudáveis"></span>
                     <span class="tendencia">+12%</span>
                 </div>
                 <h3>145</h3>
@@ -74,10 +75,10 @@
             <!-- Card 2 -->
             <div class="card-dashboard atencao">
                 <div class="cabecalho-card">
-                    <span class="icone-card">⚠️</span>
+                    <span class="icone-card"><img src="imagens/atencao.png" alt="Equipamentos que precisam de Atenção"></span>
                     <span class="tendencia">-2%</span>
                 </div>
-                <h3>{{ qtdAtencao }}</h3> <!-- MUDOU AQUI -->
+                <h3>{{ qtdAtencao }}</h3> 
                 <p class="rotulo-card">Atenção</p>
                 <p class="descricao-card">Aguardando revisão da equipe</p>
             </div>
@@ -85,10 +86,10 @@
             <!-- Card 3 -->
             <div class="card-dashboard critico">
                 <div class="cabecalho-card">
-                    <span class="icone-card">🛑</span>
+                    <span class="icone-card"> <img src="imagens/circulo.png" alt="Equipamentos em Risco Crítico"></span>
                     <span class="tendencia">+1%</span>
                 </div>
-                <h3>{{ qtdCritico }}</h3> <!-- MUDOU AQUI -->
+                <h3>{{ qtdCritico }}</h3>
                 <p class="rotulo-card">Risco Crítico</p>
                 <p class="descricao-card">Prestes a impactar a operação</p>
             </div>
@@ -129,7 +130,7 @@
             </thead>
             <tbody>
                 <tr *ngFor="let maq of listaMaquinas">
-                    <td><span class="icone-maquina">💻</span> {{ maq.nome }}</td>
+                    <td><span class="icone-maquina"><img src="imagens/computador.png" alt="Computador"></span> {{ maq.nome }}</td>
                     <td>
                         <span class="ponto" [class.critico]="maq.status === 'Crítico'" [class.atencao]="maq.status === 'Atenção'"></span> 
                         {{ maq.status }}

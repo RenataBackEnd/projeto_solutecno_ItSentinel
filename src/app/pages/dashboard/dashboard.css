@@ -276,7 +276,7 @@
     background: #ffffff;
     padding: 30px;
     border-radius: 18px;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 18px rgba(104, 168, 102, 0.13);
     border: 1px solid #dce8df;
 }
 
@@ -313,7 +313,7 @@
     padding: 15px 10px;
     font-size: 12px;
     color: #777777;
-    border-bottom: 1px solid #dce8df;
+    border-bottom: 1px solid #dce8df; 
 }
 
 .tabela-dashboard td {
