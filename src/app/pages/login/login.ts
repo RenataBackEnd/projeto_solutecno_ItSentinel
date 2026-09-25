@@ -1,61 +1,93 @@
-import { Component } from '@angular/core';
-import { Router, RouterLink } from '@angular/router'; // O Router serve para mudar de página via código
-import { FormsModule } from '@angular/forms'; // Necessário para o formulário funcionar [(ngModel)]
-import { CommonModule } from '@angular/common'; // Necessário para exibir a mensagem de erro (ngIf)
+import { Component, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { Icone } from '../../components/icone/icone';
+import { BarraAcessibilidade } from '../../components/barra-acessibilidade/barra-acessibilidade';
+import { AuthService, Sessao } from '../../services/auth';
+import { ToastService } from '../../services/toast';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [RouterLink, FormsModule, CommonModule], // Importou módulos
+  imports: [RouterLink, FormsModule, Icone, BarraAcessibilidade],
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
 export class Login {
-  
-  // Variáveis para guardar o que a Renata (ou outro usuário) digitar
-  emailUsuario: string = '';
-  senhaUsuario: string = '';
-  
-  // Variável para mostrar a mensagem de erro na tela
-  mensagemErro: string = '';
+  private router = inject(Router);
+  private auth = inject(AuthService);
+  private toast = inject(ToastService);
 
-  // Injetado Router no construtor para podermos enviar o usuário pro Dashboard
-  constructor(private router: Router) {}
+  emailUsuario = '';
+  senhaUsuario = '';
+  mostrarSenha = false;
+  manterConectado = false;
+  aceiteLgpd = false;
+  carregando = false;
 
-  // A função que é chamada quando o botão "Entrar" é clicado
+  // Credenciais válidas, mas de um colaborador (sem acesso ao Dashboard)
+  colaboradorSemAcesso: Sessao | null = null;
+
+  erros = { email: '', senha: '', lgpd: '' };
+
+  constructor() {
+    // Já logado como admin? Vai direto ao painel.
+    if (this.auth.ehAdmin()) this.router.navigate(['/dashboard']);
+  }
+
   fazerLogin() {
-    this.mensagemErro = ''; // Limpa os erros anteriores    
-    localStorage.setItem('usuarioLogado', 'true'); // Quando o login der certo:
-    localStorage.removeItem('usuarioLogado');
+    this.erros = { email: '', senha: '', lgpd: '' };
+    this.colaboradorSemAcesso = null;
 
-    // Verifica se a pessoa não digitou absolutamente nada
-    if (!this.emailUsuario || !this.senhaUsuario) {
-      this.mensagemErro = 'Por favor, preencha o e-mail e a senha.';
+    const resultado = this.auth.validar(this.emailUsuario, this.senhaUsuario);
+    if (!resultado.ok) this.erros[resultado.campo] = resultado.mensagem;
+    if (!this.aceiteLgpd) this.erros.lgpd = 'É necessário aceitar os termos da LGPD para continuar.';
+
+    if (!resultado.ok || this.erros.lgpd) {
+      const credencialErrada = !resultado.ok && resultado.mensagem.startsWith('E-mail ou senha');
+      this.toast.erro(credencialErrada ? 'Acesso negado' : 'Não foi possível entrar',
+        credencialErrada ? 'E-mail ou senha incorretos. Tente novamente.' : 'Revise os campos destacados no formulário.');
+      this.focarPrimeiroErro();
       return;
     }
 
-    // Validação da Senha (Avisando quantos caracteres foram digitados)
-    const tamanhoSenha = this.senhaUsuario.length;
-    if (tamanhoSenha < 8) {
-      this.mensagemErro = `Sua senha tem apenas ${tamanhoSenha} caracteres. O mínimo exigido são 8.`;
+    // Colaborador: credenciais corretas, mas SEM permissão para o Dashboard
+    if (resultado.sessao.perfil !== 'admin') {
+      this.colaboradorSemAcesso = resultado.sessao;
+      this.toast.erro('Acesso restrito ao administrador',
+        'Seu perfil de colaborador não tem acesso ao Dashboard.');
+      setTimeout(() => document.getElementById('aviso-perfil')?.focus());
       return;
     }
 
-    // Validação Estrita: A senha precisa ser EXATAMENTE a definida por segurança
-    if (this.senhaUsuario !== '12345678') {
-      this.mensagemErro = 'Senha incorreta. Acesso negado.';
-      return;
-    }
-
-    // Validação do E-mail Corporativo
-    const dominioOficial = '@solutecno.com.br';
-    
-    if (!this.emailUsuario.toLowerCase().endsWith(dominioOficial)) {
-       this.mensagemErro = 'Acesso negado: Utilize um e-mail corporativo válido (ex: @solutecno.com.br).';
-       return;
-    }
-
-    // Encaminha o usuário para o Dashboard se passar em tudo
+    this.carregando = true;
+    this.auth.iniciar(resultado.sessao, this.manterConectado);
+    this.toast.sucesso('Login realizado com sucesso', this.manterConectado
+      ? 'Sua sessão ficará salva neste dispositivo.'
+      : 'Sua sessão termina ao fechar o navegador.');
     this.router.navigate(['/dashboard']);
+  }
+
+  /** Colaborador segue para a área de chamados já identificado */
+  continuarComoColaborador() {
+    if (!this.colaboradorSemAcesso) return;
+    this.auth.iniciar(this.colaboradorSemAcesso, this.manterConectado);
+    this.toast.sucesso(`Olá, ${this.colaboradorSemAcesso.nome}!`, 'Você já está identificado para abrir um chamado.');
+    this.router.navigate(['/chamado']);
+  }
+
+  preencherDemo(email: string) {
+    this.emailUsuario = email;
+    this.senhaUsuario = '12345678';
+    this.erros = { email: '', senha: '', lgpd: '' };
+    this.colaboradorSemAcesso = null;
+  }
+
+  private focarPrimeiroErro() {
+    const id = this.erros.email ? 'email' : this.erros.senha ? 'senha' : null;
+    setTimeout(() => {
+      if (id) document.getElementById(id)?.focus();
+      else (document.querySelector('input[name="aceiteLgpd"]') as HTMLElement | null)?.focus();
+    });
   }
 }

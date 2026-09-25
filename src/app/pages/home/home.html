@@ -1,140 +1,177 @@
+<a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+
 <!-- CABEÇALHO -->
-<header>
-    <!-- Logo ou Nome do Sistema -->
-   <div class="logo-lateral" style="display: flex; align-items: center; gap: 10px;">   
-    <img src="imagens/icone-sentinel.png" alt="Logo" style="width: 32px; height: 32px; object-fit: contain;">
-    <h2 style="margin: 0; font-size: 20px;">IT Sentinel</h2>
-</div>
+<header class="cabecalho" [class.menu-aberto]="menuAberto()">
+    <div class="cabecalho-interno">
+        <!-- Marca (volta ao topo) -->
+        <a routerLink="/home" class="marca" aria-label="IT Sentinel — página inicial">
+            <img src="imagens/icone-sentinel-128.png" alt="" width="36" height="36">
+            <span>IT Sentinel</span>
+        </a>
 
-    <!-- Menu de navegação -->
-    <nav class="menu">
-        <ul>
-            <li>
-                <a routerLink="/home" fragment="como-funciona">Como Funciona</a>
-            </li>
-            <li>
-                <a routerLink="/home" fragment="quem-somos">Quem Somos</a>
-            </li>
-        </ul>
-    </nav>
+        <!-- Botão do menu (celular/tablet) -->
+        <button type="button" class="btn-icone botao-menu"
+                [attr.aria-expanded]="menuAberto()" aria-controls="menu-principal"
+                [attr.aria-label]="menuAberto() ? 'Fechar menu' : 'Abrir menu'"
+                (click)="menuAberto.set(!menuAberto())">
+            <app-icone [nome]="menuAberto() ? 'x' : 'menu'" />
+        </button>
 
-    <!-- Área de ações do usuário. Caixa maior -->
-    <div class="acoes-usuario">
-        <!-- Área de acessibilidade -->
-        <div class="acessibilidade">
-            <button type="button" title="Aumentar texto" (click)="aumentarFonte()">A+</button>
-            <button type="button" title="Diminuir texto" (click)="diminuirFonte()">A−</button>
-            <button type="button" title="Alto contraste" (click)="alternarContraste()">◐</button>
-            <button type="button" title="Libras" (click)="ativarLibras()">🤟</button>
-        </div>
+        <div class="area-menu" id="menu-principal">
+            <!-- Menu de navegação -->
+            <nav class="menu" aria-label="Navegação principal">
+                <ul>
+                    <li><a routerLink="/home" fragment="como-funciona" (click)="menuAberto.set(false)">Como funciona</a></li>
+                    <li><a routerLink="/home" fragment="quem-somos" (click)="menuAberto.set(false)">Quem somos</a></li>
+                </ul>
+            </nav>
 
-        <!-- Área para o botão de Login -->
-        <div class="area-login">                       
-           <a routerLink="/chamado" class="botao-login" style="background-color: #ffffff; color: #3a894b; border: 1px solid #3a894b; margin-right: 15px;">
-           Abrir Chamado</a>
-            <!-- routerLink aplicado -->
-            <a routerLink="/login" class="botao-login">Acessar Sistema</a>
+            <!-- Acessibilidade + ações -->
+            <div class="acoes-usuario">
+                <app-barra-acessibilidade />
+                <div class="area-login">
+                    <a routerLink="/chamado" class="btn btn-secundario">
+                        <app-icone nome="mais" [tamanho]="18" /> Abrir chamado
+                    </a>
+                    <a routerLink="/login" class="btn btn-primario">
+                        <app-icone nome="cadeado" [tamanho]="18" /> Acessar sistema
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </header>
 
-<main>
-    <!-- CARROSSEL -->
-    <section class="secao-carrossel">
+<main id="conteudo" tabindex="-1">
+    <!-- CARROSSEL (HERO) -->
+    <section class="secao-carrossel" aria-roledescription="carrossel" aria-label="Destaques do IT Sentinel"
+             (mouseenter)="pausarTemporariamente(true)" (mouseleave)="pausarTemporariamente(false)"
+             (focusin)="pausarTemporariamente(true)" (focusout)="pausarTemporariamente(false)">
         <div class="carrossel">
-            
-        
-            <!-- SLIDE DINÂMICO -->
-            <div class="slide-carrossel">
+            <div class="slide-carrossel" role="group" aria-roledescription="slide"
+                 [attr.aria-label]="(slideAtual + 1) + ' de ' + slides.length">
                 <div class="imagem-carrossel">
-                    <img [src]="slides[slideAtual].imagem" [alt]="slides[slideAtual].alt">
-                </div>
-                <div class="texto-carrossel">
-                    <span>{{ slides[slideAtual].tag }}</span>
-                    <h2>{{ slides[slideAtual].titulo }}</h2>
-                    <p>{{ slides[slideAtual].texto }}</p>
-                </div>
-            </div>
-
-            <!-- CONTROLES DO CARROSSEL -->
-            <div class="controles-carrossel">
-                <!-- Seta Esquerda (Volta) -->
-                <button class="seta-carrossel" type="button" (click)="slideAnterior()">&#10094;</button>
-
-                <!-- Indicadores dos slides -->
-                <div class="indicadores-carrossel">
                     @for (s of slides; track $index) {
-                        <span class="indicador" 
-                              [class.ativo]="$index === slideAtual" 
-                              (click)="irParaSlide($index)">
-                        </span>
+                        <img [src]="s.imagem" [alt]="$index === slideAtual ? s.alt : ''"
+                             [class.visivel]="$index === slideAtual"
+                             [attr.aria-hidden]="$index !== slideAtual"
+                             width="1200" height="840" [attr.fetchpriority]="$index === 0 ? 'high' : null">
                     }
                 </div>
+                <div class="texto-carrossel" aria-live="off">
+                    <span class="eyebrow">{{ slides[slideAtual].tag }}</span>
+                    <h1>{{ slides[slideAtual].titulo }}</h1>
+                    <p>{{ slides[slideAtual].texto }}</p>
+                    <div class="cta-hero">
+                        <a routerLink="/login" class="btn btn-primario">Acessar o painel <app-icone nome="seta-direita" [tamanho]="18" /></a>
+                        <a routerLink="/home" fragment="como-funciona" class="btn btn-fantasma">Saiba mais</a>
+                    </div>
 
-                <!-- Seta Direita (Avança) -->
-                <button class="seta-carrossel" type="button" (click)="avancarManual()">&#10095;</button>
+                    <!-- CONTROLES DO CARROSSEL -->
+                    <div class="controles-carrossel">
+                        <button class="seta-carrossel" type="button" (click)="slideAnterior()" aria-label="Slide anterior">
+                            <app-icone nome="chevron-esquerda" [tamanho]="20" />
+                        </button>
+
+                        <div class="indicadores-carrossel">
+                            @for (s of slides; track $index) {
+                                <button type="button" class="indicador"
+                                        [class.ativo]="$index === slideAtual"
+                                        [attr.aria-current]="$index === slideAtual ? 'true' : null"
+                                        [attr.aria-label]="'Ir para o slide ' + ($index + 1) + ': ' + s.tag"
+                                        (click)="irParaSlide($index)">
+                                    <span></span>
+                                </button>
+                            }
+                        </div>
+
+                        <button class="seta-carrossel" type="button" (click)="avancarManual()" aria-label="Próximo slide">
+                            <app-icone nome="chevron-direita" [tamanho]="20" />
+                        </button>
+
+                        <!-- Pausar/retomar: obrigatório para conteúdo que se move sozinho (WCAG 2.2.2) -->
+                        <button class="seta-carrossel pausa" type="button" (click)="alternarPausa()"
+                                [attr.aria-label]="pausadoPeloUsuario ? 'Retomar rotação automática' : 'Pausar rotação automática'">
+                            <app-icone [nome]="pausadoPeloUsuario ? 'play' : 'pausa'" [tamanho]="16" />
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- SEÇÃO COMO FUNCIONA -->
-    <section class="secao-como-funciona" id="como-funciona">
-        <div class="texto-como-funciona">
-            <span>COMO FUNCIONA</span>
-            <h2>Como o IT Sentinel funciona?</h2>
-            <p>O IT Sentinel organiza e acompanha as informações dos equipamentos de tecnologia da empresa. A partir do histórico de problemas, chamados e manutenções, a plataforma permite acompanhar a situação dos equipamentos e identificar sinais que podem indicar a necessidade de uma ação. Dessa forma, a equipe de TI pode ter uma visão mais organizada do ambiente e agir de maneira preventiva.</p>
+    <section class="secao secao-como-funciona" id="como-funciona" aria-labelledby="titulo-como-funciona">
+        <div class="cabecalho-secao">
+            <span class="eyebrow">Como funciona</span>
+            <h2 id="titulo-como-funciona">Como o IT Sentinel funciona?</h2>
+            <p>O IT Sentinel organiza e acompanha as informações dos equipamentos de tecnologia da empresa. A partir do histórico de problemas, chamados e manutenções, a plataforma permite acompanhar a situação dos equipamentos e identificar sinais que podem indicar a necessidade de uma ação.</p>
         </div>
+
+        <ul class="grade-recursos">
+            @for (r of recursos; track r.titulo) {
+                <li class="card-recurso">
+                    <span class="icone-recurso"><app-icone [nome]="r.icone" [tamanho]="24" /></span>
+                    <h3>{{ r.titulo }}</h3>
+                    <p>{{ r.texto }}</p>
+                </li>
+            }
+        </ul>
     </section>
 
     <!-- SEÇÃO QUEM SOMOS -->
-    <section class="secao-quem-somos" id="quem-somos">
+    <section class="secao secao-quem-somos" id="quem-somos" aria-labelledby="titulo-quem-somos">
         <div class="texto-quem-somos">
-            <span>QUEM SOMOS</span>
-            <h2>Solutecno</h2>
-            <p>Desde 2018, a Solutecno atua no mercado de tecnologia, trabalhando com automação comercial e soluções para empresas. Ao longo dessa trajetória e a partir de pesquisas e necessidades identificadas no mercado, surgiu a ideia de criar uma solução mais acessível, simples e objetiva para a gestão de TI. Assim nasceu o IT Sentinel, desenvolvido para proporcionar às empresas maior controle sobre seu parque tecnológico, equipamentos e ativos de TI, tornando essas informações mais organizadas e precisas.</p>
+            <span class="eyebrow">Quem somos</span>
+            <h2 id="titulo-quem-somos">Solutecno</h2>
+            <p>Desde 2018, a Solutecno atua no mercado de tecnologia, trabalhando com automação comercial e soluções para empresas. Ao longo dessa trajetória e a partir de pesquisas e necessidades identificadas no mercado, surgiu a ideia de criar uma solução mais acessível, simples e objetiva para a gestão de TI.</p>
+            <p>Assim nasceu o IT Sentinel, desenvolvido para proporcionar às empresas maior controle sobre seu parque tecnológico, equipamentos e ativos de TI, tornando essas informações mais organizadas e precisas.</p>
+            <a routerLink="/chamado" class="btn btn-secundario">Precisa de suporte? Abra um chamado <app-icone nome="seta-direita" [tamanho]="18" /></a>
         </div>
 
-        <div class="imagem-quem-somos">            
-            <img src="imagens/logo-solutecno.png" alt="Logo Solutecno">
+        <div class="imagem-quem-somos">
+            <img src="imagens/logo-solutecno.webp" alt="Logotipo da Solutecno — Soluções em Tecnologia e Infraestrutura" width="640" height="640" loading="lazy">
         </div>
     </section>
 </main>
 
 <!-- RODAPÉ -->
-<footer>
+<footer class="rodape">
     <div class="conteudo-footer">
-        
-        <!--Logo (com a imagem) e Slogan -->
-        <div class="coluna-footer marca">
+        <div class="coluna-footer marca-footer">
             <div class="logo-footer">
-                <img src="imagens/icone-sentinel.png" alt="Ícone IT Sentinel" class="icone-logo">
-                <h2>IT Sentinel</h2>
+                <img src="imagens/icone-sentinel-128.png" alt="" width="36" height="36">
+                <span>IT Sentinel</span>
             </div>
             <p>Gestão inteligente de equipamentos de TI.</p>
         </div>
 
-        <!-- Informações -->
+        <nav class="coluna-footer" aria-labelledby="titulo-info-footer">
+            <h2 id="titulo-info-footer">Informações</h2>
+            <a routerLink="/home" fragment="como-funciona">Como funciona</a>
+            <a routerLink="/home" fragment="quem-somos">Quem somos</a>
+            <a routerLink="/chamado">Abrir chamado</a>
+        </nav>
+
         <div class="coluna-footer">
-            <h3>INFORMAÇÕES</h3>
-            <a routerLink="/home" fragment="como-funciona">Como Funciona</a>
-            <a routerLink="/home" fragment="quem-somos">Quem Somos</a>
+            <h2 id="titulo-redes-footer">Solutecno</h2>
+            <!-- Apenas ícones com link; o nome da rede fica no aria-label e na dica (title) -->
+            <ul class="icones-redes" aria-labelledby="titulo-redes-footer">
+                <li><a href="https://contatosolutecno.wixsite.com/solutecno" target="_blank" rel="noopener noreferrer"
+                       aria-label="Site oficial da Solutecno (abre em nova aba)" title="Site oficial">
+                    <app-icone nome="globo" [tamanho]="20" /></a></li>
+                <li><a href="https://www.instagram.com/solutecnoba/" target="_blank" rel="noopener noreferrer"
+                       aria-label="Instagram da Solutecno (abre em nova aba)" title="Instagram">
+                    <app-icone nome="instagram" [tamanho]="20" /></a></li>
+                <li><a href="https://wa.me/5571987611575" target="_blank" rel="noopener noreferrer"
+                       aria-label="WhatsApp da Solutecno (abre em nova aba)" title="WhatsApp">
+                    <app-icone nome="whatsapp" [tamanho]="20" /></a></li>
+            </ul>
         </div>
 
-        <!-- Solutecno e Redes -->
-        <div class="coluna-footer solutecno-links">
-            <h3>SOLUTECNO</h3>            
-            <div class="icones-redes">
-                <a href="https://contatosolutecno.wixsite.com/solutecno" target="_blank" titlle="Site Oficial" rel="noreferrer noreferrer"> <img src="imagens/rede.png">Site Oficial</a>
-                <a href="https://www.instagram.com/solutecnoba/" target="_blank" title="Instagram" rel="noopener noreferrer"> <img src="imagens/instagram.png"> Instagram</a>
-                <a href="https://wa.me/5571987611575" target="_blank" title="WhatsApp" rel="noopener noreferrer"> <img src="imagens/logo.png"> WhatsApp</a>
-            </div>
-        </div>
-
-        <!-- LGPD e Copyright -->
         <div class="coluna-footer lgpd-copy">
-            <p>Este sistema respeita as diretrizes da <a href="https://www.gov.br/cidadania/pt-br/acesso-a-informacao/lgpd" target="_blank" rel="noopener noreferrer">Lei Geral de Proteção de Dados (LGPD)</a>.</p>
-            <span class="copyright">&copy; 2026 Solutecno. Todos os direitos reservados.</span>
+            <p>Este sistema respeita as diretrizes da <a href="https://www.gov.br/cidadania/pt-br/acesso-a-informacao/lgpd" target="_blank" rel="noopener noreferrer">Lei Geral de Proteção de Dados (LGPD)<span class="sr-only"> (abre em nova aba)</span></a>.</p>
         </div>
-
     </div>
+    <div class="copyright">&copy; {{ anoAtual }} Solutecno. Todos os direitos reservados.</div>
 </footer>

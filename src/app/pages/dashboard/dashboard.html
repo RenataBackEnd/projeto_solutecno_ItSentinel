@@ -1,265 +1,331 @@
+<a class="pular-conteudo" href="#conteudo-dashboard">Pular para o conteúdo</a>
+
+<!-- Fundo escuro do menu no celular -->
+@if (menuAberto) {
+    <div class="fundo-menu" (click)="menuAberto = false" aria-hidden="true"></div>
+}
+
 <!-- MENU LATERAL -->
-<aside class="menu-lateral">
-    <div class="logo-lateral" style="display: flex; align-items: center; gap: 10px;">
-        <img src="imagens/icone-sentinel.png" alt="Logo" style="width: 32px; height: 32px; object-fit: contain;">
-        <h2 style="margin: 0; font-size: 20px;">IT Sentinel</h2>
-    </div>
-    
-    <div class="secao-menu">
-        <p class="titulo-menu">GESTÃO DO AMBIENTE</p>
-        <nav class="links-menu">
-            <a href="javascript:void(0)" class="icone"><span>⊞</span> Visão Geral</a>
-            <!-- LINK DE INVENTÁRIO -->
-            <a href="javascript:void(0)" (click)="abrirModalInventario()"><span class="icone">📦</span> Inventário</a>
-            <!-- LINK DE RELATÓRIOS -->
-            <a href="javascript:void(0)" (click)="abrirModalRelatorio()"><span class="icone">📊</span> Relatórios</a>          
-        </nav>
+<aside class="menu-lateral" [class.aberto]="menuAberto" id="menu-lateral" aria-label="Menu do sistema">
+    <div class="logo-lateral">
+        <img src="imagens/icone-sentinel-128.png" alt="" width="36" height="36">
+        <span>IT Sentinel</span>
     </div>
 
+    <p class="titulo-menu" id="titulo-menu">Gestão do ambiente</p>
+    <nav class="links-menu" aria-labelledby="titulo-menu">
+        <a routerLink="/dashboard" class="ativo" aria-current="page" (click)="menuAberto = false">
+            <app-icone nome="grade" [tamanho]="20" /> Visão geral
+        </a>
+        <button type="button" (click)="abrirPainel('inventario', $event)">
+            <app-icone nome="caixa" [tamanho]="20" /> Inventário
+        </button>
+        <button type="button" (click)="abrirPainel('relatorio', $event)">
+            <app-icone nome="grafico" [tamanho]="20" /> Relatórios
+        </button>
+        <a routerLink="/chamado">
+            <app-icone nome="mais" [tamanho]="20" /> Abrir chamado
+        </a>
+    </nav>
+
     <div class="rodape-lateral">
-        <a href="javascript:void(0)" class="link-ajuda">Precisa de ajuda?<br><span>Fale com o suporte</span></a>
-        <!-- Link conectando de volta para a tela de login -->
-        <a routerLink="/login" class="link-sair"><span class="icone"><img src="imagens/porta.png" alt="Sair"></span> Sair do Sistema</a>
+        <a href="https://wa.me/5571987611575" target="_blank" rel="noopener noreferrer" class="link-ajuda"
+           title="Abre uma conversa com o suporte no WhatsApp">
+            <span class="icone-whatsapp" aria-hidden="true"><app-icone nome="whatsapp" [tamanho]="20" /></span>
+            <span>Precisa de ajuda?<small>Suporte via WhatsApp <span class="sr-only">(abre em nova aba)</span></small></span>
+            <app-icone class="externo" nome="externo" [tamanho]="14" />
+        </a>
+        <button type="button" class="link-sair" (click)="sair()">
+            <app-icone nome="sair" [tamanho]="20" /> Sair do sistema
+        </button>
     </div>
 </aside>
 
 <!-- ÁREA PRINCIPAL -->
-<main class="conteudo-principal">
-    
+<main class="conteudo-principal" id="conteudo-dashboard" tabindex="-1">
+
     <!-- CABEÇALHO DO DASHBOARD -->
     <header class="cabecalho-dashboard">
+        <button type="button" class="btn-icone botao-menu" (click)="menuAberto = true"
+                aria-controls="menu-lateral" [attr.aria-expanded]="menuAberto" aria-label="Abrir menu">
+            <app-icone nome="menu" />
+        </button>
+
         <div class="boas-vindas">
-            <span class="data-atual">SEGUNDA-FEIRA, 28 SET 2026</span>            
-            <h1 style="margin: 0;">Bom dia, Renata!</h1>
-            <img src="imagens/brilho-do-sol.png" alt="Bom dia" style="width: 28px; height: 28px; object-fit: contain;">            
+            <span class="data-atual">{{ dataHoje }}</span>
+            <!-- Ícone agora na MESMA linha do nome -->
+            <h1>
+                {{ saudacao.texto }}, {{ primeiroNome() }}!
+                <span class="icone-saudacao" [class.noite]="saudacao.icone === 'lua'">
+                    <app-icone [nome]="saudacao.icone" [tamanho]="26" />
+                </span>
+            </h1>
         </div>
 
         <div class="acoes-usuario">
-           <div class="acessibilidade">
-            <button type="button" title="Aumentar texto" (click)="aumentarFonte()">A+</button>
-            <button type="button" title="Diminuir texto" (click)="diminuirFonte()">A−</button>
-            <button type="button" title="Alto contraste" (click)="alternarContraste()">◐</button>
-            <button type="button" title="Libras" (click)="ativarLibras()">🤟</button>
-        </div>
+            <app-barra-acessibilidade />
 
-            <!-- PERFIL DO USUÁRIO -->
             <div class="perfil-usuario">
-                <div class="avatar">RR</div>
+                <div class="avatar" aria-hidden="true">{{ iniciais() }}</div>
                 <div class="info-usuario">
-                    <span class="nome-usuario">Renata Rosário</span>
-                    <span class="cargo-usuario">Gestão de TI</span>
+                    <span class="nome-usuario">{{ sessao()?.nome }}</span>
+                    <span class="cargo-usuario">{{ sessao()?.cargo }} · Admin</span>
                 </div>
             </div>
         </div>
     </header>
 
     <!-- SEÇÃO: VISÃO GERAL (CARDS) -->
-    <section class="visao-geral">
+    <section class="visao-geral" aria-labelledby="titulo-visao-geral">
         <div class="titulo-secao">
-            <h2>Visão Geral</h2>
+            <h2 id="titulo-visao-geral">Visão geral</h2>
             <p>Saúde do ambiente monitorado em tempo real</p>
         </div>
 
-        <div class="grade-cards">
-            <!-- Card 1 -->
-            <div class="card-dashboard saudavel">
+        <ul class="grade-cards">
+            <li class="card-dashboard saudavel">
                 <div class="cabecalho-card">
-                    <span class="icone-card"><img src="imagens/escudo24.png" alt="Equipamentos Saudáveis"></span>
-                    <span class="tendencia">+12%</span>
+                    <span class="icone-card"><app-icone nome="escudo" [tamanho]="22" /></span>
+                    <span class="tendencia positiva"><app-icone nome="tendencia" [tamanho]="14" /> +12%<span class="sr-only"> em relação ao mês anterior</span></span>
                 </div>
-                <h3>145</h3>
-                <p class="rotulo-card">Saudáveis</p>
+                <p class="valor-card">145</p>
+                <h3 class="rotulo-card">Saudáveis</h3>
                 <p class="descricao-card">Máquinas operando normalmente</p>
-            </div>
+            </li>
 
-            <!-- Card 2 -->
-            <div class="card-dashboard atencao">
+            <li class="card-dashboard atencao">
                 <div class="cabecalho-card">
-                    <span class="icone-card"><img src="imagens/atencao.png" alt="Equipamentos que precisam de Atenção"></span>
-                    <span class="tendencia">-2%</span>
+                    <span class="icone-card"><app-icone nome="alerta" [tamanho]="22" /></span>
+                    <span class="tendencia positiva"><app-icone nome="tendencia-baixa" [tamanho]="14" /> −2%<span class="sr-only"> em relação ao mês anterior</span></span>
                 </div>
-                <h3>{{ qtdAtencao }}</h3> 
-                <p class="rotulo-card">Atenção</p>
+                <p class="valor-card">{{ qtdAtencao }}</p>
+                <h3 class="rotulo-card">Atenção</h3>
                 <p class="descricao-card">Aguardando revisão da equipe</p>
-            </div>
+            </li>
 
-            <!-- Card 3 -->
-            <div class="card-dashboard critico">
+            <li class="card-dashboard critico">
                 <div class="cabecalho-card">
-                    <span class="icone-card"> <img src="imagens/circulo.png" alt="Equipamentos em Risco Crítico"></span>
-                    <span class="tendencia">+1%</span>
+                    <span class="icone-card"><app-icone nome="erro" [tamanho]="22" /></span>
+                    <span class="tendencia negativa"><app-icone nome="tendencia" [tamanho]="14" /> +1%<span class="sr-only"> em relação ao mês anterior</span></span>
                 </div>
-                <h3>{{ qtdCritico }}</h3>
-                <p class="rotulo-card">Risco Crítico</p>
+                <p class="valor-card">{{ qtdCritico }}</p>
+                <h3 class="rotulo-card">Risco crítico</h3>
                 <p class="descricao-card">Prestes a impactar a operação</p>
-            </div>
+            </li>
 
-            <!-- Card 4: Índice -->
-            <div class="card-dashboard indice">
-                <div class="cabecalho-card">
-                    <p class="rotulo-card">ÍNDICE DE SAÚDE</p>
+            <li class="card-dashboard indice">
+                <div>
+                    <h3 class="rotulo-card">Índice de saúde</h3>
+                    <p class="valor-card">{{ indiceSaude }}%</p>
+                    <p class="descricao-card">Meta: acima de 90%</p>
                 </div>
-                <div class="conteudo-indice">
-                    <h2>91%</h2>
-                    <div class="grafico-circulo">91%</div>
+                <div class="grafico-circulo" role="img" [attr.aria-label]="'Índice de saúde: ' + indiceSaude + '%'"
+                     [style.--progresso]="indiceSaude">
+                    <span aria-hidden="true">{{ indiceSaude }}%</span>
                 </div>
-            </div>
-        </div>
+            </li>
+        </ul>
     </section>
 
     <!-- SEÇÃO: TABELA DE MÁQUINAS -->
-    <section class="secao-tabela">
+    <section class="secao-tabela" aria-labelledby="titulo-tabela">
         <div class="cabecalho-tabela">
             <div>
-                <h2>Máquinas que precisam de atenção</h2>
-                <p>Priorize os próximos diagnósticos do seu parque</p>
+                <h2 id="titulo-tabela">Chamados e máquinas em atenção</h2>
+                <p>Priorize os próximos diagnósticos e acompanhe cada atendimento</p>
             </div>
             <div class="barra-pesquisa">
-                <input type="text" placeholder="🔍 Buscar máquina...">
+                <label for="busca-maquina" class="sr-only">Buscar máquina</label>
+                <app-icone nome="busca" [tamanho]="18" />
+                <input id="busca-maquina" type="search" class="entrada" placeholder="Buscar máquina…"
+                       [(ngModel)]="termoBusca" aria-controls="tabela-maquinas">
             </div>
         </div>
 
-        <table class="tabela-dashboard">
-            <thead>
-                <tr>
-                    <th>MÁQUINA</th>
-                    <th>STATUS</th>
-                    <th>PROBLEMA PREVISTO</th>
-                    <th>PRIORIDADE</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let maq of listaMaquinas">
-                    <td><span class="icone-maquina"><img src="imagens/computador.png" alt="Computador"></span> {{ maq.nome }}</td>
-                    <td>
-                        <span class="ponto" [class.critico]="maq.status === 'Crítico'" [class.atencao]="maq.status === 'Atenção'"></span> 
-                        {{ maq.status }}
-                    </td>
-                    <td>{{ maq.problema }}</td>
-                    <!-- "Ver diagnóstico" neutro, sem abrir relatórios -->
-                    <td><a href="javascript:void(0)" style="color: #3a894b; font-weight: bold; text-decoration: none;">Ver diagnóstico →</a></td>
-                </tr>
-            </tbody>
-        </table>
-    </section>
+        <div class="filtros" role="group" aria-label="Filtrar chamados por situação">
+            @for (f of filtros; track f.valor) {
+                <button type="button" class="filtro" [class.ativo]="filtro === f.valor" [attr.aria-pressed]="filtro === f.valor" (click)="filtro = f.valor">
+                    {{ f.rotulo }} <span class="qtd">{{ contar(f.valor) }}</span>
+                </button>
+            }
+        </div>
 
+        <p class="sr-only" aria-live="polite">{{ maquinasFiltradas.length }} chamado(s) encontrado(s)</p>
+
+        <div class="tabela-rolagem" tabindex="0" role="region" aria-labelledby="titulo-tabela">
+            <table class="tabela-dashboard" id="tabela-maquinas">
+                <thead>
+                    <tr>
+                        <th scope="col">Máquina</th>
+                        <th scope="col">Prioridade</th>
+                        <th scope="col">Etapa</th>
+                        <th scope="col">Problema previsto</th>
+                        <th scope="col">Solicitante</th>
+                        <th scope="col"><span class="sr-only">Ações</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (maq of maquinasFiltradas; track maq.id) {
+                        <tr>
+                            <td data-rotulo="Máquina">
+                                <span class="celula-maquina">
+                                    <span class="icone-maquina"><app-icone [nome]="iconeMaquina(maq.nome)" [tamanho]="18" /></span>
+                                    <span class="nome-maquina">{{ maq.nome }}<small class="protocolo">{{ maq.id }}</small></span>
+                                </span>
+                            </td>
+                            <td data-rotulo="Prioridade">
+                                <span class="selo" [class.critico]="maq.status === 'Crítico'" [class.atencao]="maq.status === 'Atenção'">
+                                    <span class="ponto" aria-hidden="true"></span>{{ maq.status }}
+                                </span>
+                            </td>
+                            <td data-rotulo="Etapa">
+                                <span class="etapa-selo" [attr.data-etapa]="maq.etapa">
+                                    <app-icone [nome]="INFO_ETAPA[maq.etapa].icone" [tamanho]="14" /> {{ INFO_ETAPA[maq.etapa].titulo }}
+                                </span>
+                            </td>
+                            <td data-rotulo="Problema">{{ maq.problema }}</td>
+                            <td data-rotulo="Solicitante">{{ maq.nomeUsuario || 'Equipe de TI' }}@if (maq.setorUsuario) { <span class="setor"> · {{ maq.setorUsuario }}</span> }</td>
+                            <td class="celula-acao">
+                                <button type="button" class="link-acao" (click)="verDiagnostico(maq, $event)">
+                                    Gerenciar<span class="sr-only"> chamado {{ maq.id }} — {{ maq.nome }}</span>
+                                    <app-icone nome="seta-direita" [tamanho]="16" />
+                                </button>
+                            </td>
+                        </tr>
+                    } @empty {
+                        <tr>
+                            <td colspan="6" class="vazio">
+                                <app-icone [nome]="termoBusca ? 'busca' : 'check-circulo'" [tamanho]="28" />
+                                @if (termoBusca) {
+                                    <strong>Nenhum chamado encontrado</strong>
+                                    <span>Tente outro termo ou <button type="button" class="link-acao" (click)="termoBusca = ''">limpe a busca</button>.</span>
+                                } @else {
+                                    <strong>Nada por aqui</strong>
+                                    <span>Não há chamados nesta situação.</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
 </main>
 
 
-<!-- PAINEL LATERAL (ABINHA) DE RELATÓRIO DE ANDAMENTO -->
-<div *ngIf="mostrarModalRelatorio" style="position: fixed; top: 0; right: 0; width: 420px; height: 100%; background: white; box-shadow: -5px 0 25px rgba(0,0,0,0.2); z-index: 9999; padding: 30px; box-sizing: border-box; font-family: sans-serif; display: flex; flex-direction: column; justify-content: space-between;">
-  
-  <div>
-    <!-- Cabeçalho da Gaveta -->
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-      <h3 style="color: #124326; margin: 0; font-size: 18px;">📊 Relatório de Andamento</h3>
-      <button (click)="fecharModalRelatorio()" style="background: #e0e0e0; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-weight: bold; color: #555;">✕</button>
-    </div>
-    
-    <p style="color: #666; font-size: 13px; margin-bottom: 25px;">
-      Monitoramento operacional baseado nos registros ativos.
-    </p>
-
-    <!-- Bloco de Identificação -->
-    <div *ngIf="listaMaquinas.length > 0" style="background: #f4f7f5; padding: 15px; border-radius: 8px; margin-bottom: 25px; border-left: 4px solid #3a894b; font-size: 13px; color: #333;">
-      <div style="margin-bottom: 6px;"><strong>Equipamento:</strong> {{ listaMaquinas[0].nome }}</div>
-      <div style="margin-bottom: 6px;"><strong>Solicitante:</strong> {{ listaMaquinas[0].nomeUsuario || 'Equipe de TI' }}</div>
-      <div style="margin-bottom: 6px;"><strong>Setor:</strong> {{ listaMaquinas[0].setorUsuario || 'Operacional' }}</div>
-      <div><strong>Problema:</strong> {{ listaMaquinas[0].problema }}</div>
-    </div>
-
-    <!-- Previsão de Solução -->
-    <div style="font-size: 14px; font-weight: bold; color: #124326; margin-bottom: 25px;">
-      Previsão de Solução: 28 set - 30 set
-    </div>
-
-    <!-- LINHA DO TEMPO / PROGRESSO VISUAL -->
-    <div style="display: flex; flex-direction: column; gap: 20px; position: relative; padding-left: 10px;">
-      
-      <!-- Aberto -->
-      <div style="display: flex; align-items: center; gap: 15px;">
-        <div style="width: 35px; height: 35px; background-color: #124326; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; z-index: 2;">
-          📦
+<!-- PAINEL LATERAL (GAVETA): RELATÓRIO OU INVENTÁRIO -->
+@if (painelAberto) {
+    <div class="fundo-painel" (click)="fecharPainel()" aria-hidden="true"></div>
+    <div class="painel" role="dialog" aria-modal="true" aria-labelledby="titulo-painel" (keydown)="prenderFoco($event)" #painel>
+        <div class="cabecalho-painel">
+            <h2 id="titulo-painel">
+                <app-icone [nome]="painelAberto === 'relatorio' ? 'grafico' : 'caixa'" [tamanho]="20" />
+                {{ painelAberto === 'relatorio' ? 'Relatório de andamento' : 'Inventário de ativos' }}
+            </h2>
+            <button type="button" class="btn-icone" (click)="fecharPainel()" aria-label="Fechar painel" #botaoFechar>
+                <app-icone nome="x" [tamanho]="18" />
+            </button>
         </div>
-        <div>
-          <div style="font-weight: bold; color: #124326; font-size: 14px;">Aberto</div>
-          <div style="font-size: 12px; color: #666;">Chamado registrado no sistema</div>
+
+        <div class="corpo-painel">
+            @if (painelAberto === 'relatorio') {
+                @if (chamadoSelecionado(); as m) {
+                    <button type="button" class="link-acao voltar-lista" (click)="selecionar(null)">
+                        <app-icone nome="chevron-esquerda" [tamanho]="16" /> Todos os chamados
+                    </button>
+                    <p class="subtitulo-painel">Chamado <strong class="protocolo">{{ m.id }}</strong> · aberto em {{ m.criadoEm | date: "dd/MM/yyyy 'às' HH:mm" }}</p>
+
+                    <dl class="bloco-info">
+                        <div><dt>Equipamento</dt><dd>{{ m.nome }}</dd></div>
+                        <div><dt>Prioridade</dt><dd><span class="selo" [class.critico]="m.status === 'Crítico'" [class.atencao]="m.status === 'Atenção'"><span class="ponto" aria-hidden="true"></span>{{ m.status }}</span></dd></div>
+                        <div><dt>Solicitante</dt><dd>{{ m.nomeUsuario || 'Equipe de TI' }}</dd></div>
+                        <div><dt>Setor</dt><dd>{{ m.setorUsuario || 'Operacional' }}</dd></div>
+                        <div><dt>Problema</dt><dd>{{ m.problema }}</dd></div>
+                    </dl>
+
+                    @if (m.etapa !== 'resolvido') {
+                        <p class="previsao"><app-icone nome="historico" [tamanho]="18" /> Previsão de solução: {{ previsaoSolucao }}</p>
+                    }
+
+                    <app-linha-tempo [chamado]="m" />
+
+                    <!-- AÇÕES DO ADMINISTRADOR: conduzem o chamado por todo o fluxo -->
+                    <section class="acoes-chamado" aria-labelledby="titulo-acoes">
+                        <h3 id="titulo-acoes">Atualizar atendimento</h3>
+
+                        @if (proximaEtapa(m); as prox) {
+                            <button type="button" class="btn btn-primario btn-bloco" (click)="avancar(m)">
+                                <app-icone [nome]="prox === 'resolvido' ? 'check-circulo' : 'seta-direita'" [tamanho]="18" />
+                                {{ prox === 'resolvido' ? 'Concluir chamado' : 'Avançar para “' + INFO_ETAPA[prox].titulo + '”' }}
+                            </button>
+
+                            @if (!mostrarImprevisto) {
+                                <button type="button" class="btn btn-alerta btn-bloco" (click)="mostrarImprevisto = true">
+                                    <app-icone nome="alerta" [tamanho]="18" /> Relatar imprevisto
+                                </button>
+                            } @else {
+                                <div class="form-imprevisto">
+                                    <label for="motivo-imprevisto" class="rotulo">O que aconteceu?</label>
+                                    <select id="motivo-imprevisto" class="entrada" [(ngModel)]="motivoImprevisto">
+                                        @for (mot of MOTIVOS; track mot) { <option [value]="mot">{{ mot }}</option> }
+                                    </select>
+                                    <div class="botoes-linha">
+                                        <button type="button" class="btn btn-fantasma btn-pequeno" (click)="mostrarImprevisto = false">Cancelar</button>
+                                        <button type="button" class="btn btn-alerta btn-pequeno" (click)="relatarImprevisto(m)">Registrar imprevisto</button>
+                                    </div>
+                                </div>
+                            }
+                        }
+
+                        @if (m.etapa === 'impedido') {
+                            <p class="aviso-imprevisto"><app-icone nome="alerta" [tamanho]="18" /> Atendimento pausado. Retome quando o imprevisto for resolvido.</p>
+                            <button type="button" class="btn btn-primario btn-bloco" (click)="retomar(m)">
+                                <app-icone nome="play" [tamanho]="16" /> Retomar atendimento
+                            </button>
+                        }
+
+                        @if (m.etapa === 'resolvido') {
+                            <p class="aviso-resolvido"><app-icone nome="check-circulo" [tamanho]="18" /> Chamado concluído. O solicitante já pode ver a solução.</p>
+                            <button type="button" class="btn btn-secundario btn-bloco" (click)="reabrir(m)">
+                                <app-icone nome="historico" [tamanho]="18" /> Reabrir chamado
+                            </button>
+                        }
+                    </section>
+                } @else {
+                    <p class="subtitulo-painel">Resumo do andamento de todos os chamados. Selecione um para gerenciar.</p>
+                    <ul class="resumo-etapas">
+                        @for (e of etapasResumo; track e) {
+                            <li><span class="etapa-selo" [attr.data-etapa]="e"><app-icone [nome]="INFO_ETAPA[e].icone" [tamanho]="14" /> {{ INFO_ETAPA[e].titulo }}</span><strong>{{ contarEtapa(e) }}</strong></li>
+                        }
+                    </ul>
+                    <ul class="lista-selecao">
+                        @for (c of listaMaquinas; track c.id) {
+                            <li><button type="button" (click)="selecionar(c)">
+                                <span><strong>{{ c.nome }}</strong><small class="protocolo">{{ c.id }}</small></span>
+                                <span class="etapa-selo" [attr.data-etapa]="c.etapa">{{ INFO_ETAPA[c.etapa].titulo }}</span>
+                                <app-icone nome="chevron-direita" [tamanho]="16" />
+                            </button></li>
+                        }
+                    </ul>
+                }
+            } @else {
+                <p class="subtitulo-painel">Visão geral e controle de ativos do parque tecnológico.</p>
+
+                <dl class="bloco-info linhas">
+                    <div><dt>Total de equipamentos</dt><dd><strong>148 unidades</strong></dd></div>
+                    <div><dt>Estações de trabalho</dt><dd>132 PCs / notebooks</dd></div>
+                    <div><dt>Impressoras / periféricos</dt><dd>12 unidades</dd></div>
+                    <div><dt>Servidores de rede</dt><dd>4 ativos</dd></div>
+                </dl>
+
+                <h3 class="titulo-bloco">Auditoria de hardware</h3>
+                <ul class="lista-auditoria">
+                    <li class="ok"><app-icone nome="check-circulo" [tamanho]="18" /><span><strong>Conforme:</strong> 145 ativos em operação normal</span></li>
+                    <li class="aviso"><app-icone nome="alerta" [tamanho]="18" /><span><strong>Requer atenção:</strong> {{ contar('abertos') }} ativo(s) com chamados em aberto</span></li>
+                </ul>
+            }
         </div>
-      </div>
 
-      <!-- Em Análise -->
-      <div style="display: flex; align-items: center; gap: 15px;">
-        <div style="width: 35px; height: 35px; background-color: #3a894b; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; z-index: 2;">
-          🔧
-        </div>
-        <div>
-          <div style="font-weight: bold; color: #3a894b; font-size: 14px;">Em Análise</div>
-          <div style="font-size: 12px; color: #666;">Diagnóstico em andamento pela equipe</div>
-        </div>
-      </div>
-
-      <!-- Resolvido -->
-      <div style="display: flex; align-items: center; gap: 15px;">
-        <div style="width: 35px; height: 35px; background-color: #e0e0e0; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #777; font-size: 14px; z-index: 2;">
-          ✓
-        </div>
-        <div>
-          <div style="font-weight: bold; color: #888; font-size: 14px;">Resolvido</div>
-          <div style="font-size: 12px; color: #aaa;">Aguardando validação final</div>
-        </div>
-      </div>
-
+        <div class="rodape-painel">IT Sentinel &copy; {{ anoAtual }} · Módulo de {{ painelAberto === 'relatorio' ? 'relatórios' : 'inventário' }}</div>
     </div>
-  </div>
-
-  <!-- Rodapé da Gaveta -->
-  <div style="text-align: center; color: #888; font-size: 11px; border-top: 1px solid #eee; padding-top: 15px;">
-    IT Sentinel &copy; 2026 - Módulo de Relatórios
-  </div>
-
-</div>
-
-
-<!-- PAINEL LATERAL (ABINHA) DE INVENTÁRIO -->
-<div *ngIf="mostrarModalInventario" style="position: fixed; top: 0; right: 0; width: 420px; height: 100%; background: white; box-shadow: -5px 0 25px rgba(0,0,0,0.2); z-index: 9999; padding: 30px; box-sizing: border-box; font-family: sans-serif; display: flex; flex-direction: column; justify-content: space-between;">
-  
-  <div>
-    <!-- Cabeçalho da Gaveta -->
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-      <h3 style="color: #124326; margin: 0; font-size: 18px;">📦 Inventário de Ativos</h3>
-      <button (click)="fecharModalInventario()" style="background: #e0e0e0; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-weight: bold; color: #555;">✕</button>
-    </div>
-    
-    <p style="color: #666; font-size: 13px; margin-bottom: 25px;">
-      Visão geral e controlo de ativos do parque tecnológico.
-    </p>
-
-    <!-- Resumo de Ativos -->
-    <div style="background: #f4f7f5; padding: 15px; border-radius: 8px; margin-bottom: 25px; border-left: 4px solid #124326; font-size: 13px; color: #333;">
-      <div style="margin-bottom: 8px; display: flex; justify-content: space-between;"><strong>Total de Equipamentos:</strong> <span style="font-weight: bold; color: #124326;">148 unidades</span></div>
-      <div style="margin-bottom: 8px; display: flex; justify-content: space-between;"><strong>Estações de Trabalho:</strong> <span>132 PCs / Notebooks</span></div>
-      <div style="margin-bottom: 8px; display: flex; justify-content: space-between;"><strong>Impressoras / Periféricos:</strong> <span>12 unidades</span></div>
-      <div style="display: flex; justify-content: space-between;"><strong>Servidores de Rede:</strong> <span>4 ativos</span></div>
-    </div>
-
-    <!-- Status do Parque -->
-    <div style="font-size: 14px; font-weight: bold; color: #124326; margin-bottom: 15px;">
-      Auditoria de Hardware
-    </div>
-
-    <div style="display: flex; flex-direction: column; gap: 12px; font-size: 13px; color: #444;">
-      <div style="background: #fafafa; padding: 10px; border-radius: 6px; border: 1px solid #eee;">
-        🟢 <strong>Conforme:</strong> 145 ativos em operação normal
-      </div>
-      <div style="background: #fff8e1; padding: 10px; border-radius: 6px; border: 1px solid #ffe0b2;">
-        ⚠️ <strong>Requer Atenção:</strong> 2 ativos com chamados ativos
-      </div>
-    </div>
-  </div>
-
-  <!-- Rodapé da Gaveta -->
-  <div style="text-align: center; color: #888; font-size: 11px; border-top: 1px solid #eee; padding-top: 15px;">
-    IT Sentinel &copy; 2026 - Módulo de Inventário
-  </div>
-
-</div>
+}

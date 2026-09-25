@@ -1,16 +1,18 @@
+import { provideRouter } from '@angular/router';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AberturaChamado } from './abertura-chamado';
+import { AberturaChamadoComponent } from './abertura-chamado';
 
 describe('AberturaChamado', () => {
-  let component: AberturaChamado;
-  let fixture: ComponentFixture<AberturaChamado>;
+  let component: AberturaChamadoComponent;
+  let fixture: ComponentFixture<AberturaChamadoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AberturaChamado],
+      imports: [AberturaChamadoComponent],
+      providers: [provideRouter([])],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AberturaChamado);
+    fixture = TestBed.createComponent(AberturaChamadoComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

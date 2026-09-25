@@ -1,81 +1,169 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, computed, inject, signal } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router'; 
-import { ChamadoService, Maquina } from '../../services/chamado';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { Chamado, ChamadoService, INFO_ETAPA, MOTIVOS_IMPREVISTO, Prioridade } from '../../services/chamado';
+import { AuthService } from '../../services/auth';
+import { ToastService } from '../../services/toast';
+import { SessaoAcoes } from '../../services/sessao-acoes';
+import { Icone } from '../../components/icone/icone';
+import { BarraAcessibilidade } from '../../components/barra-acessibilidade/barra-acessibilidade';
+import { LinhaTempo } from '../../components/linha-tempo/linha-tempo';
+
+type Tela = 'novo' | 'confirmacao' | 'meus';
 
 @Component({
   selector: 'app-abertura-chamado',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink], 
+  imports: [FormsModule, RouterLink, DatePipe, Icone, BarraAcessibilidade, LinhaTempo],
   templateUrl: './abertura-chamado.html',
   styleUrls: ['./abertura-chamado.css']
 })
 export class AberturaChamadoComponent {
-  
-  // --- VARIÁVEIS DE LOGIN DO USUÁRIO ---
-  usuarioLogado: boolean = false;
-  emailUsuario: string = '';
-  senhaUsuario: string = '';
-  mensagemErroLogin: string = '';
+  private chamados = inject(ChamadoService);
+  protected auth = inject(AuthService);
+  private toast = inject(ToastService);
+  private sessaoAcoes = inject(SessaoAcoes);
+  private router = inject(Router);
+  private rota = inject(ActivatedRoute);
 
-  // --- VARIÁVEIS DO CHAMADO ---
-  nomeMaquina: string = '';
-  statusSelecionado: 'Atenção' | 'Crítico' = 'Atenção';
-  descricaoProblema: string = '';
-  nomeSolicitante: string = ''; 
-  setorSolicitante: string = '';
-  mensagemSucesso: boolean = false;
+  protected readonly INFO_ETAPA = INFO_ETAPA;
 
-  constructor(private chamadoService: ChamadoService) {}
+  // ---------- Identificação (mesmas regras do login) ----------
+  emailUsuario = '';
+  senhaUsuario = '';
+  mostrarSenha = false;
+  manterConectado = false;
+  aceiteLgpd = false;
+  errosLogin = { email: '', senha: '', lgpd: '' };
 
-  // Função para verificar a senha e as regras de segurança antes de liberar o formulário
-  fazerLoginUsuario() {
-    this.mensagemErroLogin = ''; // Limpa os erros anteriores
+  // ---------- Formulário do chamado ----------
+  nomeMaquina = '';
+  statusSelecionado: Prioridade = 'Atenção';
+  descricaoProblema = '';
+  setorSolicitante = '';
+  erros = { maquina: '', descricao: '' };
 
-    // Verifica se a pessoa não preencheu algum dos campos
-    if (!this.emailUsuario || !this.senhaUsuario) {
-      this.mensagemErroLogin = 'Por favor, preencha o e-mail e a senha.';
-      return;
-    }
+  // ---------- Navegação entre telas ----------
+  tela = signal<Tela>('novo');
+  ultimoChamadoId = signal<string | null>(null);
+  expandido = signal<string | null>(null);
 
-    // Validação da Senha (Avisando quantos caracteres foram digitados se menor que 8)
-    const tamanhoSenha = this.senhaUsuario.length;
-    if (tamanhoSenha < 8) {
-      this.mensagemErroLogin = `Sua senha tem apenas ${tamanhoSenha} caracteres. O mínimo exigido são 8.`;
-      return;
-    }
+  sessao = this.auth.sessao;
+  private todos = toSignal(this.chamados.chamados$, { initialValue: this.chamados.getChamados() });
+  meusChamados = computed(() => {
+    const email = this.sessao()?.email;
+    return email ? this.todos().filter(c => c.emailUsuario === email) : [];
+  });
+  ultimoChamado = computed(() => this.todos().find(c => c.id === this.ultimoChamadoId()) ?? null);
 
-    // Validação Estrita: A senha precisa ser exatamente 12345678
-    if (this.senhaUsuario !== '12345678') {
-      this.mensagemErroLogin = 'Senha incorreta. Acesso negado.';
-      return;
-    }
-
-    // Se passar por todas as validações, libera a tela de abertura de chamado!
-    this.usuarioLogado = true; 
-    
-    // Pega a primeira parte do e-mail para usar como nome automático
-    this.nomeSolicitante = this.emailUsuario.split('@')[0]; 
+  constructor() {
+    // Permite abrir direto em "Meus chamados": /chamado?aba=meus
+    if (this.rota.snapshot.queryParamMap.get('aba') === 'meus' && this.sessao()) this.tela.set('meus');
   }
 
-  enviarChamado() {
-    if (this.nomeMaquina && this.descricaoProblema && this.nomeSolicitante) {
-      const novoChamado: Maquina = {
-        nome: this.nomeMaquina,
-        status: this.statusSelecionado as any,
-        problema: this.descricaoProblema,
-        nomeUsuario: this.nomeSolicitante,
-        setorUsuario: this.setorSolicitante
-      };
+  // ===== ETAPA 1: identificação =====
+  fazerLoginUsuario() {
+    this.errosLogin = { email: '', senha: '', lgpd: '' };
+    const r = this.auth.validar(this.emailUsuario, this.senhaUsuario);
+    if (!r.ok) this.errosLogin[r.campo] = r.mensagem;
+    if (!this.aceiteLgpd) this.errosLogin.lgpd = 'É necessário aceitar os termos da LGPD para continuar.';
 
-      this.chamadoService.abrirChamado(novoChamado);
-      this.mensagemSucesso = true;
-      
-      this.nomeMaquina = '';
-      this.descricaoProblema = '';
-    } else {
-      alert('Atenção: Preencha a máquina e o problema antes de registrar o chamado.');
+    if (!r.ok || this.errosLogin.lgpd) {
+      this.toast.erro('Não foi possível continuar', 'Revise os campos destacados.');
+      this.focar(this.errosLogin.email ? 'chamado-email' : this.errosLogin.senha ? 'chamado-senha' : 'chamado-lgpd');
+      return;
     }
+
+    this.auth.iniciar(r.sessao, this.manterConectado);
+    this.senhaUsuario = '';
+    this.toast.sucesso(`Olá, ${r.sessao.nome}!`, 'Identificação confirmada. Agora descreva o problema.');
+    this.irPara('novo', 'setor');
+  }
+
+  // ===== ETAPA 2: registrar =====
+  enviarChamado() {
+    const s = this.sessao();
+    if (!s) return;
+    this.erros.maquina = this.nomeMaquina.trim() ? '' : 'Informe qual equipamento está com problema.';
+    this.erros.descricao = this.descricaoProblema.trim().length >= 10 ? '' : 'Descreva o problema com pelo menos 10 caracteres.';
+
+    if (this.erros.maquina || this.erros.descricao) {
+      this.toast.erro('Faltam informações', 'Preencha os campos destacados para registrar o chamado.');
+      this.focar(this.erros.maquina ? 'maquina' : 'descricao');
+      return;
+    }
+
+    const novo = this.chamados.abrirChamado({
+      nome: this.nomeMaquina.trim(),
+      status: this.statusSelecionado,
+      problema: this.descricaoProblema.trim(),
+      nomeUsuario: s.nome,
+      emailUsuario: s.email,
+      setorUsuario: this.setorSolicitante.trim(),
+    });
+
+    this.toast.sucesso('Chamado registrado com sucesso!', `Protocolo ${novo.id}. A equipe de TI já foi notificada.`);
+    this.nomeMaquina = '';
+    this.descricaoProblema = '';
+    this.statusSelecionado = 'Atenção';
+
+    // Leva o usuário para a TELA DE CONFIRMAÇÃO (etapa 3)
+    this.ultimoChamadoId.set(novo.id);
+    this.irPara('confirmacao', 'titulo-confirmacao');
+  }
+
+  // ===== Navegação =====
+  irPara(tela: Tela, foco?: string) {
+    this.tela.set(tela);
+    window.scrollTo({ top: 0 });
+    if (foco) this.focar(foco);
+  }
+
+  acompanhar(id: string) {
+    this.expandido.set(id);
+    this.irPara('meus', 'item-' + id);
+  }
+
+  alternar(id: string) {
+    this.expandido.update(atual => (atual === id ? null : id));
+  }
+
+  sair() {
+    this.sessaoAcoes.sair('/chamado');
+  }
+
+  // ===== MODO DEMONSTRAÇÃO: simula a equipe de TI trabalhando no chamado =====
+  proximaEtapa(c: Chamado) { return this.chamados.proximaEtapa(c); }
+
+  demoAvancar(c: Chamado) {
+    const atualizado = this.chamados.avancar(c.id);
+    if (!atualizado) return;
+    if (atualizado.etapa === 'resolvido') {
+      this.toast.sucesso('Chamado resolvido!', `${c.id}: “${c.nome}” voltou a funcionar. Obrigado pela paciência.`);
+    } else {
+      this.toast.info(`Atualização no chamado ${c.id}`, `Nova etapa: ${INFO_ETAPA[atualizado.etapa].titulo}.`);
+    }
+  }
+
+  demoImprevisto(c: Chamado) {
+    const motivo = MOTIVOS_IMPREVISTO[Math.floor(Math.random() * MOTIVOS_IMPREVISTO.length)];
+    this.chamados.relatarImprevisto(c.id, motivo);
+    this.toast.alerta(`Imprevisto no chamado ${c.id}`, `${motivo}. A equipe avisará quando o atendimento for retomado.`);
+  }
+
+  demoRetomar(c: Chamado) {
+    this.chamados.retomar(c.id);
+    this.toast.info(`Chamado ${c.id} retomado`, 'O imprevisto foi resolvido e o atendimento continua.');
+  }
+
+  demoReabrir(c: Chamado) {
+    this.chamados.reabrir(c.id);
+    this.toast.alerta(`Chamado ${c.id} reaberto`, 'O problema voltou? A equipe fará uma nova análise.');
+  }
+
+  private focar(id: string) {
+    setTimeout(() => document.getElementById(id)?.focus(), 50);
   }
 }

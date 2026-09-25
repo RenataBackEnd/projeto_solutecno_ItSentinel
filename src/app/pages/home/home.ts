@@ -1,78 +1,105 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core'; // Importei o 'ChangeDetectorRef'
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, HostListener, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { Icone } from '../../components/icone/icone';
+import { BarraAcessibilidade } from '../../components/barra-acessibilidade/barra-acessibilidade';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink], 
+  imports: [RouterLink, Icone, BarraAcessibilidade],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
 export class Home implements OnInit, OnDestroy {
   slideAtual = 0;
   intervalId: any;
+  anoAtual = new Date().getFullYear();
 
-  // Variáveis para controlar o nível de zoom da fonte e o alto contraste
-  nivelFonte = 0; 
-  altoContrasteAtivo = false;
+  // Menu do celular/tablet
+  menuAberto = signal(false);
+
+  // Pausa manual (botão) e pausa temporária (mouse/foco sobre o carrossel)
+  pausadoPeloUsuario = false;
+  private pausadoTemporario = false;
 
   slides = [
     {
-      tag: 'IT SENTINEL',
+      tag: 'IT Sentinel',
       titulo: 'Seu ambiente de TI, sempre um passo à frente.',
       texto: 'Uma plataforma criada para ajudar empresas a acompanhar seus equipamentos de tecnologia e identificar sinais de problemas.',
-      imagem: 'imagens/umpassoafrente.png',
-      alt: 'Gestão de tecnologia da empresa'
+      imagem: 'imagens/umpassoafrente.webp',
+      alt: 'Escritório moderno com equipe trabalhando em computadores'
     },
     {
-      tag: 'GESTÃO DE TI',
+      tag: 'Gestão de TI',
       titulo: 'Tenha uma visão organizada dos seus equipamentos.',
       texto: 'O IT Sentinel permite acompanhar informações dos equipamentos e seu histórico dentro do ambiente de tecnologia da empresa.',
-      imagem: 'imagens/sentinel-equipamentos.png',
+      imagem: 'imagens/sentinel-equipamentos.webp',
       alt: 'Acompanhamento dos equipamentos de TI'
     },
     {
-      tag: 'AÇÃO PREVENTIVA',
+      tag: 'Ação preventiva',
       titulo: 'Identifique sinais antes que o problema aconteça.',
       texto: 'O objetivo é ajudar a equipe de TI a perceber sinais de problemas e agir de forma preventiva, evitando interrupções.',
-      imagem: 'imagens/acaopreventiva.png',
-      alt: 'Ação preventiva em equipamentos de TI'
+      imagem: 'imagens/acaopreventiva.webp',
+      alt: 'Técnico realizando manutenção preventiva em equipamento de TI'
     }
   ];
 
-  // <-- o 'constructor' para o Angular saber que vai usar o atualizador de tela
+  // Cartões da seção "Como funciona"
+  recursos = [
+    { icone: 'atividade', titulo: 'Monitoramento contínuo', texto: 'Acompanhe a saúde de cada equipamento em um só painel, com status claros de atenção e risco.' },
+    { icone: 'historico', titulo: 'Histórico centralizado', texto: 'Chamados, problemas e manutenções ficam registrados e fáceis de consultar.' },
+    { icone: 'escudo', titulo: 'Ação preventiva', texto: 'Identifique sinais de falha cedo e priorize o que pode impactar a operação.' },
+  ];
+
   constructor(private cdr: ChangeDetectorRef) {}
 
-  // Quando a página abre, liga o carrossel automático
   ngOnInit() {
-    this.iniciarAutoPlay();
+    // Quem prefere menos movimento não recebe rotação automática
+    const reduzirMovimento = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (reduzirMovimento) {
+      this.pausadoPeloUsuario = true;
+    } else {
+      this.iniciarAutoPlay();
+    }
   }
 
-  // Quando sai da página, desliga o relógio para economizar memória
   ngOnDestroy() {
     this.pararAutoPlay();
   }
 
+  // Fecha o menu do celular com Esc
+  @HostListener('document:keydown.escape')
+  fecharMenu() {
+    this.menuAberto.set(false);
+  }
+
   iniciarAutoPlay() {
-    // Troca de slide a cada 6 segundos para dar tempo de leitura
+    this.pararAutoPlay();
+    if (this.pausadoPeloUsuario || this.pausadoTemporario) return;
+    // Troca de slide a cada 7 segundos para dar tempo de leitura
     this.intervalId = setInterval(() => {
       this.proximoSlide();
-      
-      // <-- "cutuca" o navegador e força a imagem a mudar sozinha.
-      this.cdr.detectChanges(); 
-    }, 6000); 
+      this.cdr.detectChanges();
+    }, 7000);
   }
 
   pararAutoPlay() {
     if (this.intervalId) {
       clearInterval(this.intervalId);
+      this.intervalId = null;
     }
   }
 
-  // Reseta o tempo se clicar manualmente nas setas ou bolinhas
-  reiniciarAutoPlay() {
-    this.pararAutoPlay();
-    this.iniciarAutoPlay();
+  pausarTemporariamente(pausar: boolean) {
+    this.pausadoTemporario = pausar;
+    pausar ? this.pararAutoPlay() : this.iniciarAutoPlay();
+  }
+
+  alternarPausa() {
+    this.pausadoPeloUsuario = !this.pausadoPeloUsuario;
+    this.pausadoPeloUsuario ? this.pararAutoPlay() : this.iniciarAutoPlay();
   }
 
   proximoSlide() {
@@ -81,58 +108,16 @@ export class Home implements OnInit, OnDestroy {
 
   slideAnterior() {
     this.slideAtual = (this.slideAtual - 1 + this.slides.length) % this.slides.length;
-    this.reiniciarAutoPlay();
+    this.iniciarAutoPlay();
   }
 
   avancarManual() {
     this.proximoSlide();
-    this.reiniciarAutoPlay();
+    this.iniciarAutoPlay();
   }
 
   irParaSlide(index: number) {
     this.slideAtual = index;
-    this.reiniciarAutoPlay();
-  }
-
-  // FUNÇÕES DE ACESSIBILIDADE 
-
-  aumentarFonte() {
-    if (this.nivelFonte < 2) {
-      this.nivelFonte++;
-      this.aplicarAcessibilidade();
-    }
-  }
-
-  diminuirFonte() {
-    if (this.nivelFonte > 0) {
-      this.nivelFonte--;
-      this.aplicarAcessibilidade();
-    }
-  }
-
-  alternarContraste() {
-    this.altoContrasteAtivo = !this.altoContrasteAtivo;
-    this.aplicarAcessibilidade();
-  }
-
-  aplicarAcessibilidade() {
-    const body = document.body;
-    
-    // Controla o tamanho da fonte globalmente
-    body.classList.remove('fonte-grande', 'fonte-maior');
-    if (this.nivelFonte === 1) body.classList.add('fonte-grande');
-    if (this.nivelFonte === 2) body.classList.add('fonte-maior');
-
-    // Controla o alto contraste
-    if (this.altoContrasteAtivo) {
-      body.classList.add('alto-contraste');
-    } else {
-      body.classList.remove('alto-contraste');
-    }
-  }
-
-  ativarLibras() {
-    // Abre a página oficial do VLibras em nova aba
-    window.open('https://www.gov.br/governodigital/pt-br/vlibras', '_blank');
+    this.iniciarAutoPlay();
   }
 }

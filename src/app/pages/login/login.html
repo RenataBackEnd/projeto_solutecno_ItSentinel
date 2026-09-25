@@ -1,50 +1,128 @@
-<!-- ÁREA PRINCIPAL DO LOGIN -->
-    <main class="pagina-login">
-        <!-- CARD DE LOGIN -->
-        <section class="card-login">
-            <div class="logo-login">
-                <h1>IT Sentinel</h1>
+<div class="pagina-auth">
+    <!-- Barra superior: voltar + acessibilidade -->
+    <div class="topo-auth">
+        <a routerLink="/home" class="btn-voltar">
+            <app-icone nome="seta-esquerda" [tamanho]="18" /> Voltar para o início
+        </a>
+        <app-barra-acessibilidade />
+    </div>
+
+    <main class="centro-auth">
+        <section class="card-auth" aria-labelledby="titulo-login">
+            <a routerLink="/home" class="marca-card" aria-label="IT Sentinel — página inicial">
+                <img src="imagens/icone-sentinel-128.png" alt="" width="40" height="40">
+                <span>IT Sentinel</span>
+            </a>
+
+            <div class="cabecalho-card-auth">
+                <span class="eyebrow">Ambiente protegido</span>
+                <h1 id="titulo-login">Acesso restrito</h1>
+                <p>Área do administrador de TI. Colaboradores podem abrir chamados.</p>
             </div>
 
-            <!-- Identificação do ambiente -->
-            <div class="titulo-login">
-                <span>AMBIENTE PROTEGIDO</span>
-                <h2>Acesso Restrito</h2>
-                <p>Equipe de TI</p>
-            </div>
+            <!-- FORMULÁRIO: <form> permite enviar com Enter -->
+            <form class="formulario" (ngSubmit)="fazerLogin()" novalidate>
 
-            <!-- FORMULÁRIO DE LOGIN -->
-            <!-- Removemos a tag <form> padrão para termos controlo total com o Angular -->
-            <div class="formulario-login">
-                
-                <!-- Mensagem de Erro (Só aparece se houver erro) -->
-                <div class="mensagem-erro" *ngIf="mensagemErro">
-                    {{ mensagemErro }}
+                <!-- E-mail -->
+                <div class="campo">
+                    <label for="email">E-mail corporativo <span class="obrigatorio" aria-hidden="true">*</span></label>
+                    <div class="entrada-grupo">
+                        <app-icone class="icone-campo" nome="email" [tamanho]="18" />
+                        <input class="entrada" type="email" id="email" name="email" autocomplete="username"
+                               [(ngModel)]="emailUsuario" placeholder="seu.nome@solutecno.com.br" required
+                               [attr.aria-invalid]="erros.email ? true : null"
+                               [attr.aria-describedby]="erros.email ? 'erro-email' : null"
+                               (input)="erros.email = ''">
+                    </div>
+                    @if (erros.email) {
+                        <span class="erro-campo" id="erro-email"><app-icone nome="erro" [tamanho]="14" /> {{ erros.email }}</span>
+                    }
                 </div>
 
-                <!-- Campo de e-mail -->
-                <div class="campo-login">
-                    <label for="email">E-mail corporativo</label>
-                    <!-- Usamos [(ngModel)] para ligar o campo à variável do TypeScript -->
-                    <input type="email" id="email" [(ngModel)]="emailUsuario" placeholder="ex: seu.nome@solutecno.com.br" required>
+                <!-- Senha com botão "olho" -->
+                <div class="campo">
+                    <label for="senha">Senha <span class="obrigatorio" aria-hidden="true">*</span></label>
+                    <div class="entrada-grupo">
+                        <app-icone class="icone-campo" nome="cadeado" [tamanho]="18" />
+                        <input class="entrada com-acao" [type]="mostrarSenha ? 'text' : 'password'" id="senha" name="senha"
+                               autocomplete="current-password" [(ngModel)]="senhaUsuario" placeholder="Mínimo de 8 caracteres" required
+                               [attr.aria-invalid]="erros.senha ? true : null"
+                               [attr.aria-describedby]="erros.senha ? 'erro-senha' : null"
+                               (input)="erros.senha = ''">
+                        <button type="button" class="botao-olho" (click)="mostrarSenha = !mostrarSenha"
+                                [attr.aria-pressed]="mostrarSenha"
+                                [attr.aria-label]="mostrarSenha ? 'Ocultar senha' : 'Mostrar senha'"
+                                [title]="mostrarSenha ? 'Ocultar senha' : 'Mostrar senha'">
+                            <app-icone [nome]="mostrarSenha ? 'olho-fechado' : 'olho'" [tamanho]="20" />
+                        </button>
+                    </div>
+                    @if (erros.senha) {
+                        <span class="erro-campo" id="erro-senha"><app-icone nome="erro" [tamanho]="14" /> {{ erros.senha }}</span>
+                    }
                 </div>
 
-                <!-- Campo de senha -->
-                <div class="campo-login">
-                    <label for="senha">Senha</label>
-                    <input type="password" id="senha" [(ngModel)]="senhaUsuario" placeholder="Mínimo 8 caracteres">
+                <!-- Manter conectado -->
+                <label class="caixa-selecao">
+                    <input type="checkbox" name="manterConectado" [(ngModel)]="manterConectado">
+                    <span>Manter-me conectado</span>
+                </label>
+
+                <!-- Consentimento LGPD (obrigatório) -->
+                <div class="campo">
+                    <label class="caixa-selecao lgpd" [class.invalido]="erros.lgpd">
+                        <input type="checkbox" name="aceiteLgpd" [(ngModel)]="aceiteLgpd" required
+                               [attr.aria-invalid]="erros.lgpd ? true : null"
+                               [attr.aria-describedby]="erros.lgpd ? 'erro-lgpd' : null"
+                               (change)="erros.lgpd = ''">
+                        <span>
+                            Li e concordo: meus dados são tratados de acordo com as diretrizes da
+                            <a href="https://www.gov.br/cidadania/pt-br/acesso-a-informacao/lgpd" target="_blank" rel="noopener noreferrer">Lei Geral de Proteção de Dados (LGPD)<span class="sr-only"> (abre em nova aba)</span></a>.
+                            <span class="obrigatorio" aria-hidden="true">*</span>
+                        </span>
+                    </label>
+                    @if (erros.lgpd) {
+                        <span class="erro-campo" id="erro-lgpd"><app-icone nome="erro" [tamanho]="14" /> {{ erros.lgpd }}</span>
+                    }
                 </div>
 
-                <!-- Botão de acesso (Agora chama a função fazerLogin em vez de usar routerLink) -->
-                <button type="button" (click)="fazerLogin()" class="botao-entrar">Entrar no Dashboard</button>
-            </div>
+                <!-- Credenciais corretas, mas perfil sem acesso ao Dashboard -->
+                @if (colaboradorSemAcesso) {
+                    <div class="aviso-perfil" id="aviso-perfil" tabindex="-1" role="alert">
+                        <app-icone nome="cadeado" [tamanho]="20" />
+                        <div>
+                            <strong>O Dashboard é exclusivo do administrador</strong>
+                            <p>Olá, {{ colaboradorSemAcesso.nome }}! Seu perfil é de colaborador. Você pode abrir e acompanhar chamados de TI.</p>
+                            <button type="button" class="btn btn-secundario" (click)="continuarComoColaborador()">
+                                <app-icone nome="mais" [tamanho]="18" /> Ir para meus chamados
+                            </button>
+                        </div>
+                    </div>
+                }
 
-            <!-- INFORMAÇÃO SOBRE LGPD -->
-            <div class="informacao-lgpd">
-                <p>Seus dados são tratados de acordo com as diretrizes da Lei Geral de Proteção de Dados (LGPD).</p>
-            </div>
+                <button type="submit" class="btn btn-primario btn-bloco" [disabled]="carregando">
+                    @if (carregando) { <span class="spinner" aria-hidden="true"></span> Entrando… }
+                    @else { Entrar no Dashboard <app-icone nome="seta-direita" [tamanho]="18" /> }
+                </button>
+            </form>
 
-            <!-- Voltar para a página home -->
-            <a routerLink="/home" class="voltar-home">Voltar Home</a>
+            <!-- Ajuda para testar o protótipo -->
+            <details class="demo">
+                <summary><app-icone nome="info" [tamanho]="16" /> Contas de demonstração</summary>
+                <p>Senha de todas as contas: <code>12345678</code></p>
+                <div class="demo-contas">
+                    <button type="button" (click)="preencherDemo('admin@solutecno.com.br')">
+                        <strong>Administrador</strong><span>admin@solutecno.com.br</span>
+                    </button>
+                    <button type="button" (click)="preencherDemo('renata.rosario@solutecno.com.br')">
+                        <strong>Colaboradora</strong><span>renata.rosario@solutecno.com.br</span>
+                    </button>
+                </div>
+            </details>
+
+            <div class="rodape-card-auth">
+                <app-icone nome="escudo" [tamanho]="16" />
+                <span>Acesso exclusivo do administrador de TI</span>
+            </div>
         </section>
     </main>
+</div>

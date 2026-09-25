@@ -1,519 +1,161 @@
-/* Faz a página rolar suavemente ao clicar nos links do menu */
-html {
-    scroll-behavior: smooth;
+/* ===== CABEÇALHO (fixo no topo) ===== */
+.cabecalho {
+    position: sticky; top: 0; z-index: 100;
+    background: color-mix(in srgb, var(--cor-superficie) 92%, transparent);
+    backdrop-filter: saturate(1.4) blur(10px);
+    border-bottom: 1px solid var(--cor-borda);
 }
-
-/* Cabeçalho */
-header {
-    background-color: #ffffff;
-    height: 80px; /* altura cabeçalho */
-    display: flex; /* organiza o que está dentro do header */
-    align-items: center; /* centraliza verticalmente */
-    justify-content: space-between; /* distribui os elementos horizontalmente */
-    padding: 0 60px; /* cria espaço nas laterais */
-    border-bottom: 1px solid #dce8df; /* linha discreta na parte inferior do cabeçalho */
+.cabecalho-interno {
+    display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
+    max-width: 80rem; min-height: 4.5rem; margin: 0 auto;
+    padding: .75rem clamp(1rem, 4vw, 2.5rem);
 }
+.marca { display: flex; align-items: center; gap: .625rem; text-decoration: none; flex-shrink: 0; }
+.marca img { width: 2.25rem; height: 2.25rem; }
+.marca span { font-size: 1.25rem; font-weight: 800; color: var(--cor-titulo); letter-spacing: -.01em; }
 
-/* Nome do Sistema */
-.logo h1 {
-    font-size: 28px;
-    color: #1a4a2f;
-}
-
-/* Menu de Navegação */
-.menu ul {
-    display: flex;
-    gap: 30px;
-    list-style: none;
-}
-
+.area-menu { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex: 1; }
+.menu ul { display: flex; gap: .25rem; list-style: none; }
 .menu a {
-    text-decoration: none;
-    color: #1a4a2f;
-    font-size: 16px;
-    font-weight: 600;
+    display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 .875rem;
+    border-radius: var(--raio-sm);
+    color: var(--cor-titulo); font-weight: 600; text-decoration: none;
 }
+.menu a:hover { background: var(--cor-superficie-2); color: var(--cor-primaria); }
 
-.menu a:hover {
-    color: #3a894b;
-}
+.acoes-usuario { display: flex; align-items: center; gap: 1rem; }
+.area-login { display: flex; gap: .625rem; }
+.botao-menu { display: none; }
 
-/* Ações do usuário */
-.acoes-usuario {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-/* Acessibilidade */
-.acessibilidade {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.acessibilidade button {
-    width: 32px;
-    height: 32px;
-    border: 1px solid #b8cfc0;
-    background-color: #ffffff;
-    color: #1a4a2f;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.acessibilidade button:hover {
-    background-color: #ebdcdd;
-}
-
-/* Botão de acesso ao sistema */
-.botao-login {
-    display: inline-block;
-    background-color: #3a894b;
-    color: #ffffff;
-    padding: 12px 22px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-/* Efeito botão de acesso ao sistema */
-.botao-login:hover {
-    background-color: #1a4a2f;
-}
-
-/* CARROSSEL */
-.secao-carrossel {
-    width: 100%;
-    padding: 60px;
-    background-color: #f5f9f6;
-}
-
+/* ===== HERO / CARROSSEL ===== */
+.secao-carrossel { padding: clamp(1.25rem, 4vw, 3.5rem) clamp(1rem, 4vw, 2.5rem); }
 .carrossel {
-    position: relative;
-    max-width: 1200px;
-    min-height: 420px;
-    margin: 0 auto;
-    background-color: #ffffff;
-    border-radius: 20px;
-    overflow: hidden;
-    border: 1px solid #dce8df;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+    max-width: 75rem; margin: 0 auto; overflow: hidden;
+    background: var(--cor-superficie);
+    border: 1px solid var(--cor-borda); border-radius: 1.5rem;
+    box-shadow: var(--sombra-md);
 }
-
-/* Cada slide */
-.slide-carrossel {
-    display: flex;
-    align-items: center;
-    min-height: 420px;
-}
-
-/* Imagem do slide. A moldura */
-.imagem-carrossel {
-    width: 50%;
-    height: 420px;
-    background-color: #dcebdd;
-}
-
-/* A fotografia dentro da moldura */
+.slide-carrossel { display: grid; grid-template-columns: 1fr 1fr; min-height: 28rem; }
+.imagem-carrossel { position: relative; background: var(--cor-primaria-suave); min-height: 18rem; }
 .imagem-carrossel img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+    opacity: 0; transition: opacity 500ms ease;
 }
+.imagem-carrossel img.visivel { opacity: 1; }
 
-/* Texto do slide */
-.texto-carrossel {
-    width: 50%;
-    padding: 50px;
-}
+.texto-carrossel { display: flex; flex-direction: column; justify-content: center; padding: clamp(1.75rem, 4vw, 3.5rem); }
+.texto-carrossel h1 { font-size: clamp(1.75rem, 3.2vw, 2.5rem); letter-spacing: -.02em; margin-bottom: 1rem; }
+.texto-carrossel p { font-size: 1.0625rem; line-height: 1.65; color: var(--cor-texto-suave); max-width: 34rem; }
+.cta-hero { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.75rem; }
 
-.texto-carrossel span {
-    display: block;
-    margin-bottom: 15px;
-    color: #3a894b;
-    font-size: 14px;
-    font-weight: bold;
-    letter-spacing: 1px;
-}
-
-.texto-carrossel h2 {
-    margin-bottom: 20px;
-    color: #1a4a2f;
-    font-size: 34px;
-    line-height: 1.2;
-}
-
-.texto-carrossel p {
-    color: #333333;
-    font-size: 17px;
-    line-height: 1.6;
-}
-
-/* Controles do carrossel */
-.controles-carrossel {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-/* Setas */
+.controles-carrossel { display: flex; align-items: center; gap: .5rem; margin-top: 2rem; }
 .seta-carrossel {
-    width: 34px;
-    height: 34px;
-    border: none;
-    border-radius: 50%;
-    background-color: #3a894b;
-    color: #ffffff;
-    cursor: pointer;
-    font-size: 18px;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 2.75rem; height: 2.75rem; border-radius: 50%;
+    border: 1px solid var(--cor-borda); background: var(--cor-superficie); color: var(--cor-titulo);
 }
+.seta-carrossel:hover { background: var(--cor-primaria); border-color: var(--cor-primaria); color: var(--cor-sobre-primaria); }
+.seta-carrossel.pausa { margin-left: auto; width: 2.5rem; height: 2.5rem; }
 
-.seta-carrossel:hover {
-    background-color: #1a4a2f;
+.indicadores-carrossel { display: flex; }
+/* Botão de 24px de área clicável; bolinha visual menor */
+.indicador { display: inline-flex; align-items: center; justify-content: center; width: 1.75rem; height: 2.75rem; border: 0; background: none; }
+.indicador span { width: .5rem; height: .5rem; border-radius: var(--raio-pill); background: var(--cor-borda-forte); transition: width var(--transicao), background-color var(--transicao); }
+.indicador.ativo span { width: 1.5rem; background: var(--cor-primaria); }
+
+/* ===== SEÇÕES ===== */
+.secao { max-width: 75rem; margin: 0 auto; padding: clamp(3rem, 7vw, 5.5rem) clamp(1rem, 4vw, 2.5rem); }
+.cabecalho-secao { max-width: 46rem; margin: 0 auto 2.5rem; text-align: center; }
+.secao h2 { font-size: clamp(1.75rem, 3vw, 2.25rem); letter-spacing: -.02em; margin-bottom: 1rem; }
+.secao p { font-size: 1.0625rem; line-height: 1.7; color: var(--cor-texto-suave); }
+
+.grade-recursos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; list-style: none; }
+.card-recurso {
+    padding: 1.75rem; background: var(--cor-superficie);
+    border: 1px solid var(--cor-borda); border-radius: var(--raio-lg);
+    transition: transform var(--transicao), box-shadow var(--transicao), border-color var(--transicao);
 }
-
-/* Indicadores. Se refere as bolinha do carrossel se vão ficar ativas ou normais */
-.indicadores-carrossel {
-    display: flex;
-    gap: 8px;
+.card-recurso:hover { transform: translateY(-3px); box-shadow: var(--sombra-md); border-color: var(--cor-primaria); }
+.icone-recurso {
+    display: inline-flex; padding: .75rem; margin-bottom: 1rem; border-radius: var(--raio-md);
+    background: var(--cor-primaria-suave); color: var(--cor-primaria);
 }
+.card-recurso h3 { font-size: 1.125rem; margin-bottom: .5rem; }
+.card-recurso p { font-size: .9375rem; line-height: 1.6; }
 
-.indicador {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background-color: #b8cfc0;
-}
-
-.indicador.ativo {
-    background-color: #3a894b;
-}
-
-/* COMO FUNCIONA */
-.secao-como-funciona {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 80px 60px;
-    text-align: center;
-}
-
-/* QUEM SOMOS */
-.secao-quem-somos {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 60px;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 80px 60px;
-}
-
-/* Controla a largura das caixas de texto independentemente do estilo da fonte */
-.texto-como-funciona {
-    max-width: 850px;
-    margin: 0 auto;
-}
-
-.texto-quem-somos {
-    width: 55%;
-}
-
-/* ESTILOS UNIFICADOS DE TEXTO (Aplica a mesma fonte, cor e tamanho às duas secções) */
-.texto-como-funciona span,
-.texto-quem-somos span {
-    display: block;
-    margin-bottom: 15px;
-    color: #3a894b;
-    font-size: 14px;
-    font-weight: bold;
-    letter-spacing: 1px;
-    text-transform: uppercase; /* Garante que fica sempre em maiúsculas */
-}
-
-.texto-como-funciona h2,
-.texto-quem-somos h2 {
-    margin-bottom: 25px;
-    color: #1a4a2f;
-    font-size: 36px; /* Padronizado para 36px */
-    line-height: 1.2;
-}
-
-.texto-como-funciona p,
-.texto-quem-somos p {
-    color: #333333;
-    font-size: 18px; /* Padronizado para 18px */
-    line-height: 1.6; /* Espaçamento entre linhas mais confortável */
-    margin-bottom: 18px;
-    text-align: justify; /* Alinha o texto de forma limpa em ambas as secções */
-}
-
-/* Espaço para imagem/logo da Solutecno */
-.imagem-quem-somos {
-    width: 45%;
-    height: 320px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: transparent;
-    border-radius: 16px;
-}
-
+.secao-quem-somos { display: grid; grid-template-columns: 1.2fr 1fr; align-items: center; gap: clamp(2rem, 5vw, 4rem); }
+.texto-quem-somos p { margin-bottom: 1rem; }
+.texto-quem-somos .btn { margin-top: .75rem; white-space: normal; }
+.imagem-quem-somos { display: flex; justify-content: center; }
 .imagem-quem-somos img {
-    max-width: 90%;
-    max-height: 90%;
-    object-fit: contain;
-    border-radius: 8px;
+    width: 100%; max-width: 20rem; height: auto; aspect-ratio: 1;
+    border-radius: var(--raio-lg); box-shadow: var(--sombra-md); border: 1px solid var(--cor-borda);
 }
 
-/* ESTILOS DO RODAPÉ (FOOTER) */
-footer {
-    background-color: #1a4a2f; /* Fundo verde escuro */
-    color: #ffffff;
-    padding: 60px 5% 40px 5%; /* Espaçamento amplo e elegante */
-    font-family: Arial, sans-serif;
-}
-
-/* Container que segura as 4 colunas */
+/* ===== RODAPÉ ===== */
+.rodape { background: var(--cor-marca-escura); color: var(--cor-marca-escura-texto); }
 .conteudo-footer {
-    display: flex;
-    justify-content: space-between; /* Espalha as colunas uniformemente */
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 30px;
-    max-width: 1200px;
-    margin: 0 auto;
+    display: grid; grid-template-columns: 1.3fr 1fr 1fr 1.4fr; gap: 2rem;
+    max-width: 75rem; margin: 0 auto; padding: 3.5rem clamp(1rem, 4vw, 2.5rem) 2.5rem;
+}
+.coluna-footer { display: flex; flex-direction: column; gap: .5rem; }
+.logo-footer { display: flex; align-items: center; gap: .625rem; }
+.logo-footer img { width: 2.25rem; height: 2.25rem; }
+.logo-footer span { font-size: 1.25rem; font-weight: 800; }
+.coluna-footer p { font-size: .875rem; line-height: 1.6; color: var(--cor-marca-escura-suave); }
+.coluna-footer h2 {
+    font-size: .75rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--cor-marca-escura-suave); margin-bottom: .25rem;
+}
+.coluna-footer > a { color: var(--cor-marca-escura-texto); text-decoration: none; font-size: .9375rem; padding: .125rem 0; width: fit-content; }
+.coluna-footer > a:hover, .lgpd-copy a:hover { text-decoration: underline; }
+.lgpd-copy a { color: var(--cor-marca-escura-texto); font-weight: 700; }
+
+.icones-redes { display: flex; gap: .625rem; list-style: none; }
+.icones-redes a {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 2.75rem; height: 2.75rem; border-radius: 50%;
+    color: var(--cor-marca-escura-texto);
+    background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .18);
+    transition: background-color var(--transicao), transform var(--transicao);
+}
+.icones-redes a:hover { background: rgba(255, 255, 255, .18); transform: translateY(-2px); }
+.rodape :focus-visible { outline-color: #ffffff; }
+
+.copyright {
+    max-width: 75rem; margin: 0 auto; padding: 1.25rem clamp(1rem, 4vw, 2.5rem);
+    border-top: 1px solid rgba(255, 255, 255, .12);
+    font-size: .8125rem; color: var(--cor-marca-escura-suave);
 }
 
-/* Estrutura padrão para cada uma das 4 colunas */
-.coluna-footer {
-    display: flex;
-    flex-direction: column;
-    gap: 12px; 
-    flex: 1; 
-    min-width: 200px;
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 68rem) {
+    .botao-menu { display: inline-flex; }
+    .area-menu {
+        display: none;
+        position: absolute; top: 100%; left: 0; right: 0;
+        flex-direction: column; align-items: stretch; gap: 1rem;
+        padding: 1rem clamp(1rem, 4vw, 2.5rem) 1.5rem;
+        background: var(--cor-superficie); border-bottom: 1px solid var(--cor-borda);
+        box-shadow: var(--sombra-md);
+    }
+    .menu-aberto .area-menu { display: flex; }
+    .menu ul { flex-direction: column; }
+    .acoes-usuario { flex-direction: column; align-items: stretch; }
+    .area-login { flex-direction: column; }
+    .conteudo-footer { grid-template-columns: 1fr 1fr; }
 }
 
-/* Logo e Slogan */
-.marca .logo-footer {
-    display: flex;
-    align-items: center; /* Centraliza a imagem e o texto na mesma linha */
-    gap: 12px; /* Espaço entre o ícone e a palavra "IT Sentinel" */
+@media (max-width: 48rem) {
+    .slide-carrossel { grid-template-columns: 1fr; }
+    .imagem-carrossel { aspect-ratio: 16 / 10; min-height: 0; }
+    .grade-recursos { grid-template-columns: 1fr; }
+    .secao-quem-somos { grid-template-columns: 1fr; }
+    .imagem-quem-somos { order: -1; }
+    .imagem-quem-somos img { max-width: 14rem; }
+    .cta-hero .btn { flex: 1; }
 }
 
-/* Tamanho exato e padrão para a foto do ícone 3D */
-.marca .logo-footer .icone-logo {
-    width: 36px;
-    height: auto;
-    object-fit: contain;
-}
-
-.marca .logo-footer h2 {
-    font-size: 1.4em;
-    margin: 0;
-    font-weight: bold;
-}
-
-.marca p {
-    font-size: 0.85em;
-    color: #dcebdd; 
-    line-height: 1.4;
-}
-
-/* Títulos das colunas (INFORMAÇÕES, SOLUTECNO) */
-.coluna-footer h3 {
-    font-size: 0.70em;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #8fb996; 
-    margin-bottom: 5px;
-}
-
-/* Links do rodapé */
-.coluna-footer a {
-    color: #ffffff !important; /* Força o branco puro, sem azul */
-    text-decoration: none;
-    font-size: 0.85em;
-    font-weight: normal;
-}
-
-.coluna-footer a:hover {
-    color: #dcebdd !important;
-    text-decoration: underline;
-}
-
-/* Redes Sociais */
-.icones-redes {
-    display: flex;
-    flex-direction: column; 
-    gap: 8px;
-    margin-top: 5px;
-}
-
-/* LGPD e Copyright */
-.lgpd-copy p {
-    font-size: 0.85em;
-    line-height: 1.5;
-    margin: 0 0 20px 0;
-}
-
-.lgpd-copy a {
-    font-weight: bold;
-}
-
-.lgpd-copy .copyright {
-    font-size: 0.70em;
-    color: #8fb996; /* Cinza esverdeado discreto para os direitos autorais */
-}
-
-/* RESPONSIVIDADE */
-@media (max-width: 450px) {
-    /* Ajusta o cabeçalho para telas menores */
-    header {
-        padding: 0 30px;
-    }
-
-    /* Permite que os botões de acessibilidade se organizem */
-    .acessibilidade {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    /* Diminui o espaço externo do carrossel */
-    .secao-carrossel {
-        padding: 40px 30px;
-    }
-
-    /* Coloca imagem e texto um abaixo do outro */
-    .slide-carrossel {
-        flex-direction: column;
-        min-height: auto;
-    }
-
-    /* Imagem ocupa toda a largura */
-    .imagem-carrossel {
-        width: 100%;
-        height: 280px;
-    }
-
-    /* Texto ocupa toda a largura */
-    .texto-carrossel {
-        width: 100%;
-        padding: 35px;
-        padding-bottom: 70px;
-    }
-
-    .texto-carrossel h2 {
-        font-size: 28px;
-    }
-
-    .secao-como-funciona {
-        padding: 60px 30px;
-    }
-
-    /* Quem Somos também fica em coluna */
-    .secao-quem-somos {
-        flex-direction: column;
-        padding: 60px 30px;
-    }
-
-    .texto-quem-somos,
-    .imagem-quem-somos {
-        width: 100%;
-    }
-
-    /* Organiza o rodapé em uma coluna */
-    .conteudo-footer {
-        flex-direction: column;
-    }
-}
-/* Quando a tela tiver até 450px de largura, aplique estas regras */
-@media (max-width: 450px) {    
-    header {
-        height: auto;
-        flex-direction: column;
-        gap: 20px;
-        padding: 25px 20px;
-    }
-
-    .menu ul {
-        gap: 18px;
-    }
-
-    .menu a {
-        font-size: 14px;
-    }
-
-    /* Organiza os controles (botões) e o acesso ao sistema */
-    .acoes-usuario {
-        width: 100%;
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .area-login {
-        width: 100%;
-        text-align: center;
-    }
-
-    .botao-login {
-        width: 100%;
-    }
-
-    /* Diminui o espaço do carrossel no celular */
-    .secao-carrossel {
-        padding: 25px 15px;
-    }
-
-    .carrossel {
-        border-radius: 14px;
-    }
-
-    .imagem-carrossel {
-        height: 220px;
-    }
-
-    .texto-carrossel {
-        padding: 30px 25px 70px;
-    }
-
-    .texto-carrossel h2 {
-        font-size: 25px;
-    }
-
-    .texto-carrossel p {
-        font-size: 15px;
-    }
-
-    .secao-como-funciona,
-    .secao-quem-somos {
-        padding: 50px 20px;
-    }
-
-    .texto-como-funciona h2,
-    .texto-quem-somos h2 {
-        font-size: 28px;
-    }
-
-    .texto-como-funciona p,
-    .texto-quem-somos p {
-        font-size: 16px;
-    }
-
-    .imagem-quem-somos {
-        height: 250px;
-    }
-
-    footer {
-        padding: 40px 25px;
-    }
+@media (max-width: 30rem) {
+    .conteudo-footer { grid-template-columns: 1fr; }
 }

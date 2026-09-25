@@ -1,11 +1,30 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-  <title>ItSentinel</title>
+  <title>IT Sentinel — Gestão inteligente de equipamentos de TI</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <meta name="description" content="IT Sentinel: acompanhe a saúde dos equipamentos de TI da sua empresa e aja de forma preventiva.">
+  <meta name="theme-color" content="#1a4a2f">
+  <meta name="color-scheme" content="light dark">
+  <!-- Ícone do site (favicon): logo do IT Sentinel -->
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48 64x64">
+  <link rel="icon" type="image/png" sizes="32x32" href="imagens/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="128x128" href="imagens/icone-sentinel-128.png">
+  <link rel="apple-touch-icon" href="imagens/apple-touch-icon.png">
+  <script>
+    // Aplica tema e fonte ANTES do Angular carregar (evita "piscar" branco no modo escuro)
+    (function () {
+      try {
+        var t = localStorage.getItem('itsentinel.tema');
+        if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+        var f = localStorage.getItem('itsentinel.fonte');
+        if (f) document.documentElement.setAttribute('data-fonte', f);
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body>
   <app-root></app-root>

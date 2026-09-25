@@ -1,69 +1,318 @@
-<div class="container-centralizado">
-<h2 style="margin: 0 0 20px 0; font-size: 28px; color: #124326;">IT Sentinel</h2>
-   <!-- TELA DE LOGIN (Só aparece se NÃO estiver logado) -->
-  <div *ngIf="!usuarioLogado" style="padding: 30px; background: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 500px;">
-    <h2 style="color: #124326; margin-bottom: 10px; text-align: center;">Identificação de Colaborador</h2>
-    <p style="color: #555; margin-bottom: 25px; text-align: center;">Faça login para abrir um chamado de TI.</p>
-
-    <div style="margin-bottom: 15px;">
-      <label style="display: block; font-weight: bold; margin-bottom: 5px;">Seu E-mail Corporativo:</label>
-      <input type="email" [(ngModel)]="emailUsuario" placeholder="exemplo@empresa.com.br" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
-    </div>
-
-    <div style="margin-bottom: 20px;">
-      <label style="display: block; font-weight: bold; margin-bottom: 5px;">Senha de Acesso:</label>
-      <input type="password" [(ngModel)]="senhaUsuario" placeholder="Digite uma senha" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
-    </div>
-
-    <div *ngIf="mensagemErroLogin" style="color: #d9534f; margin-bottom: 15px; font-weight: bold; text-align: center;">
-      {{ mensagemErroLogin }}
-    </div>
-
-    <button (click)="fazerLoginUsuario()" style="background-color: #3a894b; color: white; padding: 12px 20px; border: none; border-radius: 4px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold;">Autenticar</button>
-
-    <div style="text-align: center; margin-top: 25px;">
-      <a routerLink="/" style="color: #1a4a2f; font-weight: bold; text-decoration: none;">← Voltar para a Página Inicial</a>
-    </div>
+<div class="pagina-auth">
+  <!-- Barra superior: voltar + acessibilidade -->
+  <div class="topo-auth">
+    <a routerLink="/home" class="btn-voltar">
+      <app-icone nome="seta-esquerda" [tamanho]="18" /> Voltar para o início
+    </a>
+    <app-barra-acessibilidade />
   </div>
 
+  <main class="centro-auth">
+    <section class="card-auth card-chamado" [class.largo]="sessao()" aria-labelledby="titulo-pagina">
 
-  <!-- FORMULÁRIO DE CHAMADO (Só aparece se ESTIVER logado) -->
-  <div *ngIf="usuarioLogado" style="padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 600px;">
-    <h2 style="color: #124326; margin-bottom: 10px;">Abrir Novo Chamado</h2>
-    <p style="color: #555; margin-bottom: 25px;">Olá, <strong>{{ nomeSolicitante }}</strong>! Registre o problema abaixo.</p>
+      <!-- Cabeçalho do cartão: marca SEMPRE dentro do cartão -->
+      <header class="topo-card">
+        <a routerLink="/home" class="marca-card" aria-label="IT Sentinel — página inicial">
+          <img src="imagens/icone-sentinel-128.png" alt="" width="40" height="40">
+          <span>IT Sentinel</span>
+        </a>
+        <span class="selo-area">Central de chamados</span>
+      </header>
 
-    <div style="margin-bottom: 15px;">
-      <label style="display: block; font-weight: bold; margin-bottom: 5px;">Seu Setor (Opcional):</label>
-      <input type="text" [(ngModel)]="setorSolicitante" placeholder="Ex: RH, Financeiro..." style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
-    </div>
+      <!-- Usuário identificado + abas -->
+      @if (sessao(); as s) {
+        <div class="barra-usuario">
+          <div class="avatar" aria-hidden="true">{{ s.nome.charAt(0) }}</div>
+          <div class="dados-usuario">
+            <strong>{{ s.nome }}</strong>
+            <span>{{ s.email }}</span>
+          </div>
+          @if (s.perfil === 'admin') {
+            <a routerLink="/dashboard" class="btn btn-fantasma btn-pequeno"><app-icone nome="grade" [tamanho]="16" /> Dashboard</a>
+          }
+          <button type="button" class="btn btn-fantasma btn-pequeno" (click)="sair()">
+            <app-icone nome="sair" [tamanho]="16" /> Sair
+          </button>
+        </div>
 
-    <div style="margin-bottom: 15px;">
-      <label style="display: block; font-weight: bold; margin-bottom: 5px;">Nome da Máquina (Ex: Impressora sala diretoria):</label>
-      <input type="text" [(ngModel)]="nomeMaquina" placeholder="Digite o identificador da máquina" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
-    </div>
+        <nav class="abas" aria-label="Seções da central de chamados">
+          <button type="button" class="aba" [class.ativa]="tela() !== 'meus'" [attr.aria-current]="tela() !== 'meus' ? 'page' : null"
+                  (click)="irPara('novo', 'setor')">
+            <app-icone nome="mais" [tamanho]="18" /> Novo chamado
+          </button>
+          <button type="button" class="aba" [class.ativa]="tela() === 'meus'" [attr.aria-current]="tela() === 'meus' ? 'page' : null"
+                  (click)="irPara('meus')">
+            <app-icone nome="historico" [tamanho]="18" /> Meus chamados
+            @if (meusChamados().length) { <span class="contador-aba">{{ meusChamados().length }}</span> }
+          </button>
+        </nav>
+      }
 
-    <div style="margin-bottom: 15px;">
-      <label style="display: block; font-weight: bold; margin-bottom: 5px;">Nível do Problema:</label>
-      <select [(ngModel)]="statusSelecionado" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
-        <option value="Atenção">Atenção (Impacto Baixo/Médio)</option>
-        <option value="Crítico">Crítico (Impacto Alto/Parada)</option>
-      </select>
-    </div>
+      <!-- Indicador de etapas (1 Identificação → 2 Detalhes → 3 Confirmação) -->
+      @if (tela() !== 'meus') {
+        <ol class="etapas" aria-label="Etapas para abrir um chamado">
+          <li [class.ativa]="!sessao()" [class.concluida]="sessao()" [attr.aria-current]="!sessao() ? 'step' : null">
+            <span class="numero">@if (sessao()) { <app-icone nome="check" [tamanho]="14" [traco]="3" /> } @else { 1 }</span>
+            <span class="rotulo-etapa">Identificação</span>
+          </li>
+          <li class="linha" aria-hidden="true"></li>
+          <li [class.ativa]="sessao() && tela() === 'novo'" [class.concluida]="tela() === 'confirmacao'"
+              [attr.aria-current]="sessao() && tela() === 'novo' ? 'step' : null">
+            <span class="numero">@if (tela() === 'confirmacao') { <app-icone nome="check" [tamanho]="14" [traco]="3" /> } @else { 2 }</span>
+            <span class="rotulo-etapa">Detalhes</span>
+          </li>
+          <li class="linha" aria-hidden="true"></li>
+          <li [class.ativa]="tela() === 'confirmacao'" [attr.aria-current]="tela() === 'confirmacao' ? 'step' : null">
+            <span class="numero">3</span>
+            <span class="rotulo-etapa">Confirmação</span>
+          </li>
+        </ol>
+      }
 
-    <div style="margin-bottom: 20px;">
-      <label style="display: block; font-weight: bold; margin-bottom: 5px;">Descrição do Problema Previsto:</label>
-      <textarea [(ngModel)]="descricaoProblema" rows="4" placeholder="Descreva o erro ou falha..." style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;"></textarea>
-    </div>
+      <!-- ================= ETAPA 1: IDENTIFICAÇÃO ================= -->
+      @if (!sessao()) {
+        <div class="cabecalho-card-auth">
+          <h1 id="titulo-pagina">Identifique-se</h1>
+          <p>Entre com seu e-mail corporativo para abrir e acompanhar chamados de TI.</p>
+        </div>
 
-    <button (click)="enviarChamado()" style="background-color: #124326; color: white; padding: 12px 20px; border: none; border-radius: 4px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold;">Registrar Chamado</button>
+        <form class="formulario" (ngSubmit)="fazerLoginUsuario()" novalidate>
+          <div class="campo">
+            <label for="chamado-email">E-mail corporativo <span class="obrigatorio" aria-hidden="true">*</span></label>
+            <div class="entrada-grupo">
+              <app-icone class="icone-campo" nome="email" [tamanho]="18" />
+              <input class="entrada" type="email" id="chamado-email" name="email" autocomplete="username"
+                     [(ngModel)]="emailUsuario" placeholder="seu.nome@solutecno.com.br" required
+                     [attr.aria-invalid]="errosLogin.email ? true : null"
+                     [attr.aria-describedby]="errosLogin.email ? 'erro-chamado-email' : null"
+                     (input)="errosLogin.email = ''">
+            </div>
+            @if (errosLogin.email) {
+              <span class="erro-campo" id="erro-chamado-email"><app-icone nome="erro" [tamanho]="14" /> {{ errosLogin.email }}</span>
+            }
+          </div>
 
-    <div *ngIf="mensagemSucesso" style="margin-top: 20px; padding: 15px; background-color: #d4edda; color: #155724; border-radius: 4px; text-align: center; font-weight: bold;">
-      ✅ Chamado registrado com sucesso! A equipe de TI já foi notificada.
-    </div>
-    
-    <div style="text-align: center; margin-top: 25px;">
-      <a routerLink="/" style="color: #1a4a2f; font-weight: bold; text-decoration: none;">← Voltar para a Página Inicial</a>
-    </div>
-  </div>
+          <div class="campo">
+            <label for="chamado-senha">Senha <span class="obrigatorio" aria-hidden="true">*</span></label>
+            <div class="entrada-grupo">
+              <app-icone class="icone-campo" nome="cadeado" [tamanho]="18" />
+              <input class="entrada com-acao" [type]="mostrarSenha ? 'text' : 'password'" id="chamado-senha" name="senha"
+                     autocomplete="current-password" [(ngModel)]="senhaUsuario" placeholder="Mínimo de 8 caracteres" required
+                     [attr.aria-invalid]="errosLogin.senha ? true : null"
+                     [attr.aria-describedby]="errosLogin.senha ? 'erro-chamado-senha' : null"
+                     (input)="errosLogin.senha = ''">
+              <button type="button" class="botao-olho" (click)="mostrarSenha = !mostrarSenha"
+                      [attr.aria-pressed]="mostrarSenha"
+                      [attr.aria-label]="mostrarSenha ? 'Ocultar senha' : 'Mostrar senha'"
+                      [title]="mostrarSenha ? 'Ocultar senha' : 'Mostrar senha'">
+                <app-icone [nome]="mostrarSenha ? 'olho-fechado' : 'olho'" [tamanho]="20" />
+              </button>
+            </div>
+            @if (errosLogin.senha) {
+              <span class="erro-campo" id="erro-chamado-senha"><app-icone nome="erro" [tamanho]="14" /> {{ errosLogin.senha }}</span>
+            }
+          </div>
 
+          <label class="caixa-selecao">
+            <input type="checkbox" name="manterConectado" [(ngModel)]="manterConectado">
+            <span>Manter-me conectado</span>
+          </label>
+
+          <div class="campo">
+            <label class="caixa-selecao caixa-lgpd" [class.invalido]="errosLogin.lgpd">
+              <input type="checkbox" id="chamado-lgpd" name="aceiteLgpd" [(ngModel)]="aceiteLgpd" required
+                     [attr.aria-invalid]="errosLogin.lgpd ? true : null"
+                     [attr.aria-describedby]="errosLogin.lgpd ? 'erro-chamado-lgpd' : null"
+                     (change)="errosLogin.lgpd = ''">
+              <span>
+                Li e concordo: meus dados são tratados de acordo com as diretrizes da
+                <a href="https://www.gov.br/cidadania/pt-br/acesso-a-informacao/lgpd" target="_blank" rel="noopener noreferrer">Lei Geral de Proteção de Dados (LGPD)<span class="sr-only"> (abre em nova aba)</span></a>.
+                <span class="obrigatorio" aria-hidden="true">*</span>
+              </span>
+            </label>
+            @if (errosLogin.lgpd) {
+              <span class="erro-campo" id="erro-chamado-lgpd"><app-icone nome="erro" [tamanho]="14" /> {{ errosLogin.lgpd }}</span>
+            }
+          </div>
+
+          <button type="submit" class="btn btn-primario btn-bloco">
+            Continuar <app-icone nome="seta-direita" [tamanho]="18" />
+          </button>
+        </form>
+      }
+
+      <!-- ================= ETAPA 2: NOVO CHAMADO ================= -->
+      @if (sessao() && tela() === 'novo') {
+        <div class="cabecalho-card-auth alinhado-esquerda">
+          <h1 id="titulo-pagina">Abrir novo chamado</h1>
+          <p>Descreva o problema. A equipe de TI será notificada assim que você registrar.</p>
+        </div>
+
+        <form class="formulario" (ngSubmit)="enviarChamado()" novalidate>
+          <div class="grade-2">
+            <div class="campo">
+              <label for="setor">Seu setor <span class="opcional">(opcional)</span></label>
+              <input class="entrada" type="text" id="setor" name="setor"
+                     [(ngModel)]="setorSolicitante" placeholder="Ex.: RH, Financeiro">
+            </div>
+
+            <div class="campo">
+              <label for="maquina">Equipamento <span class="obrigatorio" aria-hidden="true">*</span></label>
+              <input class="entrada" type="text" id="maquina" name="maquina" required
+                     [(ngModel)]="nomeMaquina" placeholder="Ex.: Impressora da diretoria"
+                     [attr.aria-invalid]="erros.maquina ? true : null"
+                     [attr.aria-describedby]="erros.maquina ? 'erro-maquina' : null"
+                     (input)="erros.maquina = ''">
+              @if (erros.maquina) {
+                <span class="erro-campo" id="erro-maquina"><app-icone nome="erro" [tamanho]="14" /> {{ erros.maquina }}</span>
+              }
+            </div>
+          </div>
+
+          <fieldset class="campo">
+            <legend class="rotulo">Nível do problema <span class="obrigatorio" aria-hidden="true">*</span></legend>
+            <div class="opcoes-nivel">
+              <label class="opcao-nivel atencao" [class.selecionada]="statusSelecionado === 'Atenção'">
+                <input type="radio" name="nivel" value="Atenção" [(ngModel)]="statusSelecionado">
+                <app-icone nome="alerta" [tamanho]="20" />
+                <span><strong>Atenção</strong><small>Impacto baixo ou médio</small></span>
+              </label>
+              <label class="opcao-nivel critico" [class.selecionada]="statusSelecionado === 'Crítico'">
+                <input type="radio" name="nivel" value="Crítico" [(ngModel)]="statusSelecionado">
+                <app-icone nome="erro" [tamanho]="20" />
+                <span><strong>Crítico</strong><small>Impacto alto ou parada</small></span>
+              </label>
+            </div>
+          </fieldset>
+
+          <div class="campo">
+            <label for="descricao">Descrição do problema <span class="obrigatorio" aria-hidden="true">*</span></label>
+            <textarea class="entrada" id="descricao" name="descricao" rows="4" maxlength="500" required
+                      [(ngModel)]="descricaoProblema" placeholder="O que está acontecendo? Desde quando? Aparece alguma mensagem de erro?"
+                      [attr.aria-invalid]="erros.descricao ? true : null"
+                      [attr.aria-describedby]="erros.descricao ? 'erro-descricao contador-descricao' : 'contador-descricao'"
+                      (input)="erros.descricao = ''"></textarea>
+            <div class="linha-dica">
+              @if (erros.descricao) {
+                <span class="erro-campo" id="erro-descricao"><app-icone nome="erro" [tamanho]="14" /> {{ erros.descricao }}</span>
+              }
+              <span class="dica-campo contador" id="contador-descricao">{{ descricaoProblema.length }}/500</span>
+            </div>
+          </div>
+
+          <div class="acoes-form">
+            <button type="submit" class="btn btn-primario">
+              <app-icone nome="check" [tamanho]="18" /> Registrar chamado
+            </button>
+          </div>
+        </form>
+      }
+
+      <!-- ================= ETAPA 3: CONFIRMAÇÃO ================= -->
+      @if (sessao() && tela() === 'confirmacao') {
+        @if (ultimoChamado(); as c) {
+          <div class="confirmacao">
+            <span class="selo-sucesso" aria-hidden="true"><app-icone nome="check" [tamanho]="32" [traco]="3" /></span>
+            <h1 id="titulo-confirmacao" tabindex="-1">Chamado registrado!</h1>
+            <p>A equipe de TI já foi notificada e você pode acompanhar o andamento a qualquer momento.</p>
+
+            <dl class="resumo">
+              <div><dt>Protocolo</dt><dd><strong class="protocolo">{{ c.id }}</strong></dd></div>
+              <div><dt>Equipamento</dt><dd>{{ c.nome }}</dd></div>
+              <div><dt>Prioridade</dt><dd><span class="selo" [class.critico]="c.status === 'Crítico'" [class.atencao]="c.status === 'Atenção'"><span class="ponto" aria-hidden="true"></span>{{ c.status }}</span></dd></div>
+              <div><dt>Registrado em</dt><dd>{{ c.criadoEm | date: "dd/MM/yyyy 'às' HH:mm" }}</dd></div>
+            </dl>
+
+            <div class="proximos">
+              <h2>O que acontece agora?</h2>
+              <ol>
+                <li>A equipe analisa o problema (normalmente em até 1 dia útil).</li>
+                <li>Um técnico entra em contato, se precisar de mais informações.</li>
+                <li>Você recebe a atualização aqui em <strong>Meus chamados</strong>.</li>
+              </ol>
+            </div>
+
+            <div class="acoes-confirmacao">
+              <button type="button" class="btn btn-primario" (click)="acompanhar(c.id)">
+                <app-icone nome="historico" [tamanho]="18" /> Acompanhar chamado
+              </button>
+              <button type="button" class="btn btn-secundario" (click)="irPara('novo', 'setor')">
+                <app-icone nome="mais" [tamanho]="18" /> Abrir outro chamado
+              </button>
+              <a routerLink="/home" class="btn btn-fantasma">Voltar ao início</a>
+            </div>
+          </div>
+        }
+      }
+
+      <!-- ================= MEUS CHAMADOS ================= -->
+      @if (sessao() && tela() === 'meus') {
+        <div class="cabecalho-card-auth alinhado-esquerda">
+          <h1 id="titulo-pagina">Meus chamados</h1>
+          <p>Acompanhe cada etapa do atendimento dos seus chamados.</p>
+        </div>
+
+        @if (meusChamados().length === 0) {
+          <div class="vazio">
+            <app-icone nome="caixa" [tamanho]="32" />
+            <strong>Você ainda não abriu nenhum chamado</strong>
+            <p>Quando algo não estiver funcionando, registre um chamado e acompanhe por aqui.</p>
+            <button type="button" class="btn btn-primario" (click)="irPara('novo', 'setor')"><app-icone nome="mais" [tamanho]="18" /> Abrir chamado</button>
+          </div>
+        } @else {
+          <ul class="lista-chamados">
+            @for (c of meusChamados(); track c.id) {
+              <li class="item-chamado" [class.aberto]="expandido() === c.id">
+                <button type="button" class="cabecalho-item" [id]="'item-' + c.id"
+                        [attr.aria-expanded]="expandido() === c.id" [attr.aria-controls]="'detalhe-' + c.id"
+                        (click)="alternar(c.id)">
+                  <span class="info-item">
+                    <span class="protocolo">{{ c.id }}</span>
+                    <strong>{{ c.nome }}</strong>
+                    <small>Aberto em {{ c.criadoEm | date: 'dd/MM/yyyy' }}</small>
+                  </span>
+                  <span class="etapa-selo" [attr.data-etapa]="c.etapa">
+                    <app-icone [nome]="INFO_ETAPA[c.etapa].icone" [tamanho]="14" /> {{ INFO_ETAPA[c.etapa].titulo }}
+                  </span>
+                  <app-icone class="seta-item" nome="chevron-direita" [tamanho]="18" />
+                </button>
+
+                @if (expandido() === c.id) {
+                  <div class="detalhe-item" [id]="'detalhe-' + c.id">
+                    <p class="problema"><strong>Problema:</strong> {{ c.problema }}</p>
+                    <app-linha-tempo [chamado]="c" />
+
+                    <!-- Controles para experimentar o fluxo completo do protótipo -->
+                    <div class="demo-fluxo" role="group" [attr.aria-label]="'Simular atendimento do chamado ' + c.id">
+                      <p><app-icone nome="info" [tamanho]="16" /> <strong>Modo demonstração:</strong> simule o trabalho da equipe de TI neste chamado.</p>
+                      <div class="botoes-demo">
+                        @if (proximaEtapa(c); as prox) {
+                          <button type="button" class="btn btn-primario btn-pequeno" (click)="demoAvancar(c)">
+                            <app-icone nome="seta-direita" [tamanho]="16" /> Avançar para “{{ INFO_ETAPA[prox].titulo }}”
+                          </button>
+                          <button type="button" class="btn btn-alerta btn-pequeno" (click)="demoImprevisto(c)">
+                            <app-icone nome="alerta" [tamanho]="16" /> Simular imprevisto
+                          </button>
+                        }
+                        @if (c.etapa === 'impedido') {
+                          <button type="button" class="btn btn-primario btn-pequeno" (click)="demoRetomar(c)">
+                            <app-icone nome="play" [tamanho]="14" /> Retomar atendimento
+                          </button>
+                        }
+                        @if (c.etapa === 'resolvido') {
+                          <button type="button" class="btn btn-secundario btn-pequeno" (click)="demoReabrir(c)">
+                            <app-icone nome="historico" [tamanho]="16" /> O problema voltou? Reabrir
+                          </button>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                }
+              </li>
+            }
+          </ul>
+        }
+      }
+    </section>
+  </main>
 </div>

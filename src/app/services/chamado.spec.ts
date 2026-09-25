@@ -1,37 +1,32 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { TestBed } from '@angular/core/testing';
+import { ChamadoService } from './chamado';
 
-// Estrutura exata baseada no seu Dashboard
-export interface Maquina {
-  nome: string;
-  status: 'Saudável' | 'Atenção' | 'Crítico';
-  problema: string;
-}
+describe('ChamadoService', () => {
+  let service: ChamadoService;
 
-@Injectable({
-  providedIn: 'root'
-})
-export class ChamadoService {
-  // Lista inicial baseada na sua imagem do Dashboard
-  private maquinasIniciais: Maquina[] = [
-    { nome: 'Diretório de PCs', status: 'Crítico', problema: 'aquecimento de CPU' },
-    { nome: 'NB-Financeiro-04', status: 'Atenção', problema: '97%' },
-    { nome: 'PC-Atendimento-12', status: 'Atenção', problema: 'Atualização' },
-    { nome: 'SRV-ARQUIVOS-01', status: 'Crítico', problema: 'Backup não realizado' }
-  ];
+  beforeEach(() => {
+    localStorage.clear();
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(ChamadoService);
+  });
 
-  // O "rádio transmissor" que avisa o Dashboard quando algo muda
-  private maquinasSubject = new BehaviorSubject<Maquina[]>(this.maquinasIniciais);
-  
-  // Variável que o Dashboard vai ficar escutando
-  maquinas$ = this.maquinasSubject.asObservable();
+  it('abre um chamado com protocolo e etapa "aberto"', () => {
+    const c = service.abrirChamado({ nome: 'PC Teste', status: 'Crítico', problema: 'Não liga', emailUsuario: 'a@solutecno.com.br' });
+    expect(c.id).toMatch(/^CH-\d{4}-\d{4}$/);
+    expect(c.etapa).toBe('aberto');
+    expect(service.getChamados()[0].id).toBe(c.id);
+    expect(localStorage.getItem('itsentinel.chamados.v2')).toContain('PC Teste');
+  });
 
-  constructor() { }
-
-  // Função para adicionar um novo chamado
-  abrirChamado(novaMaquina: Maquina) {
-    const listaAtual = this.maquinasSubject.value;
-    // Adiciona o novo chamado no início da lista
-    this.maquinasSubject.next([novaMaquina, ...listaAtual]);
-  }
-}
+  it('percorre o fluxo completo, com imprevisto e retomada', () => {
+    const { id } = service.abrirChamado({ nome: 'PC', status: 'Atenção', problema: 'Lento demais' });
+    expect(service.avancar(id)?.etapa).toBe('em-analise');
+    expect(service.relatarImprevisto(id, 'Aguardando peça')?.etapa).toBe('impedido');
+    expect(service.avancar(id)?.etapa).toBe('impedido');           // não avança enquanto impedido
+    expect(service.retomar(id)?.etapa).toBe('em-analise');           // volta para onde estava
+    expect(service.avancar(id)?.etapa).toBe('em-atendimento');
+    expect(service.avancar(id)?.etapa).toBe('resolvido');
+    expect(service.reabrir(id)?.etapa).toBe('em-analise');
+    expect(service.porId(id)!.historico.length).toBe(7);
+  });
+});
