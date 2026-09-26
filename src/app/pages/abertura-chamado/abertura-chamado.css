@@ -60,13 +60,6 @@
 
 .alinhado-esquerda { text-align: left; }
 
-/* LGPD */
-.caixa-lgpd {
-    padding: .875rem 1rem; border: 1px solid var(--cor-borda); border-radius: var(--raio-sm);
-    background: var(--cor-superficie-2); font-size: .8125rem; color: var(--cor-texto-suave);
-}
-.caixa-lgpd.invalido { border-color: var(--cor-erro); background: var(--cor-erro-fundo); }
-
 /* Formulário */
 .grade-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.125rem; }
 fieldset { border: 0; min-width: 0; }

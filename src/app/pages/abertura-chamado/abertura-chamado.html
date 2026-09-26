@@ -118,23 +118,6 @@
             <span>Manter-me conectado</span>
           </label>
 
-          <div class="campo">
-            <label class="caixa-selecao caixa-lgpd" [class.invalido]="errosLogin.lgpd">
-              <input type="checkbox" id="chamado-lgpd" name="aceiteLgpd" [(ngModel)]="aceiteLgpd" required
-                     [attr.aria-invalid]="errosLogin.lgpd ? true : null"
-                     [attr.aria-describedby]="errosLogin.lgpd ? 'erro-chamado-lgpd' : null"
-                     (change)="errosLogin.lgpd = ''">
-              <span>
-                Li e concordo: meus dados são tratados de acordo com as diretrizes da
-                <a href="https://www.gov.br/cidadania/pt-br/acesso-a-informacao/lgpd" target="_blank" rel="noopener noreferrer">Lei Geral de Proteção de Dados (LGPD)<span class="sr-only"> (abre em nova aba)</span></a>.
-                <span class="obrigatorio" aria-hidden="true">*</span>
-              </span>
-            </label>
-            @if (errosLogin.lgpd) {
-              <span class="erro-campo" id="erro-chamado-lgpd"><app-icone nome="erro" [tamanho]="14" /> {{ errosLogin.lgpd }}</span>
-            }
-          </div>
-
           <button type="submit" class="btn btn-primario btn-bloco">
             Continuar <app-icone nome="seta-direita" [tamanho]="18" />
           </button>

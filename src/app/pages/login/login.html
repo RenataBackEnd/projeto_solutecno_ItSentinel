@@ -67,24 +67,6 @@
                     <span>Manter-me conectado</span>
                 </label>
 
-                <!-- Consentimento LGPD (obrigatório) -->
-                <div class="campo">
-                    <label class="caixa-selecao lgpd" [class.invalido]="erros.lgpd">
-                        <input type="checkbox" name="aceiteLgpd" [(ngModel)]="aceiteLgpd" required
-                               [attr.aria-invalid]="erros.lgpd ? true : null"
-                               [attr.aria-describedby]="erros.lgpd ? 'erro-lgpd' : null"
-                               (change)="erros.lgpd = ''">
-                        <span>
-                            Li e concordo: meus dados são tratados de acordo com as diretrizes da
-                            <a href="https://www.gov.br/cidadania/pt-br/acesso-a-informacao/lgpd" target="_blank" rel="noopener noreferrer">Lei Geral de Proteção de Dados (LGPD)<span class="sr-only"> (abre em nova aba)</span></a>.
-                            <span class="obrigatorio" aria-hidden="true">*</span>
-                        </span>
-                    </label>
-                    @if (erros.lgpd) {
-                        <span class="erro-campo" id="erro-lgpd"><app-icone nome="erro" [tamanho]="14" /> {{ erros.lgpd }}</span>
-                    }
-                </div>
-
                 <!-- Credenciais corretas, mas perfil sem acesso ao Dashboard -->
                 @if (colaboradorSemAcesso) {
                     <div class="aviso-perfil" id="aviso-perfil" tabindex="-1" role="alert">

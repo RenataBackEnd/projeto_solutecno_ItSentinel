@@ -30,13 +30,12 @@ export class AberturaChamadoComponent {
 
   protected readonly INFO_ETAPA = INFO_ETAPA;
 
-  // ---------- Identificação (mesmas regras do login) ----------
+  // ---------- Identificação (mesmas regras do login) 
   emailUsuario = '';
   senhaUsuario = '';
   mostrarSenha = false;
   manterConectado = false;
-  aceiteLgpd = false;
-  errosLogin = { email: '', senha: '', lgpd: '' };
+  errosLogin = { email: '', senha: '' };
 
   // ---------- Formulário do chamado ----------
   nomeMaquina = '';
@@ -65,14 +64,13 @@ export class AberturaChamadoComponent {
 
   // ===== ETAPA 1: identificação =====
   fazerLoginUsuario() {
-    this.errosLogin = { email: '', senha: '', lgpd: '' };
+    this.errosLogin = { email: '', senha: '' };
     const r = this.auth.validar(this.emailUsuario, this.senhaUsuario);
     if (!r.ok) this.errosLogin[r.campo] = r.mensagem;
-    if (!this.aceiteLgpd) this.errosLogin.lgpd = 'É necessário aceitar os termos da LGPD para continuar.';
 
-    if (!r.ok || this.errosLogin.lgpd) {
+    if (!r.ok) {
       this.toast.erro('Não foi possível continuar', 'Revise os campos destacados.');
-      this.focar(this.errosLogin.email ? 'chamado-email' : this.errosLogin.senha ? 'chamado-senha' : 'chamado-lgpd');
+      this.focar(this.errosLogin.email ? 'chamado-email' : 'chamado-senha');
       return;
     }
 

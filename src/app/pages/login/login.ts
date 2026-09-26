@@ -22,13 +22,12 @@ export class Login {
   senhaUsuario = '';
   mostrarSenha = false;
   manterConectado = false;
-  aceiteLgpd = false;
   carregando = false;
 
   // Credenciais válidas, mas de um colaborador (sem acesso ao Dashboard)
   colaboradorSemAcesso: Sessao | null = null;
 
-  erros = { email: '', senha: '', lgpd: '' };
+  erros = { email: '', senha: '' };
 
   constructor() {
     // Já logado como admin? Vai direto ao painel.
@@ -36,14 +35,12 @@ export class Login {
   }
 
   fazerLogin() {
-    this.erros = { email: '', senha: '', lgpd: '' };
+    this.erros = { email: '', senha: '' };
     this.colaboradorSemAcesso = null;
 
     const resultado = this.auth.validar(this.emailUsuario, this.senhaUsuario);
     if (!resultado.ok) this.erros[resultado.campo] = resultado.mensagem;
-    if (!this.aceiteLgpd) this.erros.lgpd = 'É necessário aceitar os termos da LGPD para continuar.';
-
-    if (!resultado.ok || this.erros.lgpd) {
+    if (!resultado.ok) {
       const credencialErrada = !resultado.ok && resultado.mensagem.startsWith('E-mail ou senha');
       this.toast.erro(credencialErrada ? 'Acesso negado' : 'Não foi possível entrar',
         credencialErrada ? 'E-mail ou senha incorretos. Tente novamente.' : 'Revise os campos destacados no formulário.');
@@ -79,15 +76,12 @@ export class Login {
   preencherDemo(email: string) {
     this.emailUsuario = email;
     this.senhaUsuario = '12345678';
-    this.erros = { email: '', senha: '', lgpd: '' };
+    this.erros = { email: '', senha: '' };
     this.colaboradorSemAcesso = null;
   }
 
   private focarPrimeiroErro() {
-    const id = this.erros.email ? 'email' : this.erros.senha ? 'senha' : null;
-    setTimeout(() => {
-      if (id) document.getElementById(id)?.focus();
-      else (document.querySelector('input[name="aceiteLgpd"]') as HTMLElement | null)?.focus();
-    });
+    const id = this.erros.email ? 'email' : 'senha';
+    setTimeout(() => document.getElementById(id)?.focus());
   }
 }

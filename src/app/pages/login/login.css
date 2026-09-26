@@ -1,15 +1,5 @@
 /* Estilos base (cartão, campos, botões) vêm do design system em src/styles.css */
 
-.caixa-selecao.lgpd {
-    padding: .875rem 1rem;
-    border: 1px solid var(--cor-borda);
-    border-radius: var(--raio-sm);
-    background: var(--cor-superficie-2);
-    font-size: .8125rem;
-    color: var(--cor-texto-suave);
-}
-.caixa-selecao.lgpd.invalido { border-color: var(--cor-erro); background: var(--cor-erro-fundo); }
-
 .btn-bloco { margin-top: .25rem; min-height: 3rem; font-size: 1rem; }
 .btn-bloco:disabled { opacity: .75; cursor: progress; }
 
